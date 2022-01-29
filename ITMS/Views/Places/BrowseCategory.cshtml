@@ -1,0 +1,24 @@
+﻿<div class="card-body">
+    <div class="card o-hidden shadow-lg" style="margin-top: 44px;">
+        <div class="card-deck">
+
+            @{
+                IEnumerable<tblPlaces> Places = ViewData["Places"] as IEnumerable<tblPlaces>;
+                var i = 1;
+                foreach (var item in Places)
+                {
+
+                    <div class="col-md-4 rounded mx-auto d-block">
+
+                        <img src="@("~/Images/"+item.ImgName)" asp-append-version="true" width="250px" height="250px">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Name</h5>
+                            <p class="card-text">@item.Category.CategoryName</p>
+                            <a class="btn btn-outline-info" asp-controller="Places" asp-action="PlaceInfo" asp-route-id="@item.GuId">View </a>
+                        </div>
+                    </div>
+                    i++;
+                } }
+        </div>
+    </div>
+</div>
