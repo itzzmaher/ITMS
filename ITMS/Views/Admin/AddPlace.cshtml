@@ -1,0 +1,89 @@
+﻿
+@model ITMS.Models.tblPlaces
+
+<div id="v-card" class="d-flex justify-content-center" style="margin-top: 100px;">
+    <div class="card col-md-6">
+        <div class="card-header">
+            <h3>Add Place</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="AddPlace" id="form" name="form1" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="col-form-label">Place Name</label>
+                        <input type="text" asp-for="Name" class="form-control">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="col-form-label">Creation Date of the Place</label>
+                        <input type="date" asp-for="CreationDate" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="col-form-label"> Category</label>
+                        <select class="form-control custom-select" asp-items="ViewBag.CategoryId" asp-for="CategoryId"></select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="col-form-label">City</label>
+                        <select class="form-control custom-select" asp-items="ViewBag.CityId" asp-for="CityId"></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="col-form-label"> Description</label>
+                        <input type="text" asp-for="Description" class="form-control" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="col-form-label">Picture</label>
+                        <input type="file" name="ifile" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 " style="text-align: left; margin-top: 30px;">
+                        <button type="submit" class="btn btn-dark btn-search" onclick=" return Valdation()"> Add </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+@*<div class="col-md-10 ">
+        <table id="datatablesSimple">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Place Name</th>
+                    <th>Description</th>
+                    <th>Creation Date</th>
+                    <th>Picture</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    IEnumerable<tblPlaces> Places = ViewData["Places"] as IEnumerable<tblPlaces>;
+                    var i = 1;
+                    foreach (var item in Places)
+                    {
+
+                        <tr>
+                            <td>@i </td>
+                            <td>@item.Name</td>
+                            <td>@item.Description</td>
+                            <td>@item.CreationDate</td>
+                            <td>
+                                <img src="@("~/Images/"+item.ImgName)" asp-append-version="true" width="250px" height="250px"/>
+                            </td>
+
+                        </tr>
+                        i++;
+                    } }
+            </tbody>
+        </table>
+    </div>*@
+
