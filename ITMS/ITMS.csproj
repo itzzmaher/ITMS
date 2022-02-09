@@ -5,8 +5,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\assets\**" />
+    <Content Remove="wwwroot\assets\**" />
+    <EmbeddedResource Remove="wwwroot\assets\**" />
+    <None Remove="wwwroot\assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Migrations\20220118233319_add-place.cs" />
     <Compile Remove="Migrations\20220118233319_add-place.Designer.cs" />
+    <Compile Remove="Migrations\20220215063118_AddCertificate2.cs" />
+    <Compile Remove="Migrations\20220215063118_AddCertificate2.Designer.cs" />
+    <Compile Remove="Migrations\20220215080428_addStatus.cs" />
+    <Compile Remove="Migrations\20220215080428_addStatus.Designer.cs" />
+    <Compile Remove="Migrations\20220215080539_addStatus.cs" />
+    <Compile Remove="Migrations\20220215080539_addStatus.Designer.cs" />
+    <Compile Remove="Migrations\20220215080810_addStatus.cs" />
+    <Compile Remove="Migrations\20220215080810_addStatus.Designer.cs" />
+    <Compile Remove="Migrations\20220215081218_addStatus.cs" />
+    <Compile Remove="Migrations\20220215081218_addStatus.Designer.cs" />
+    <Compile Remove="Migrations\20220215081509_addStatus.cs" />
+    <Compile Remove="Migrations\20220215081509_addStatus.Designer.cs" />
+    <Compile Remove="Migrations\20220215081635_addStatus.cs" />
+    <Compile Remove="Migrations\20220215081635_addStatus.Designer.cs" />
+    <Compile Remove="Migrations\20220215082244_addStatus.cs" />
+    <Compile Remove="Migrations\20220215082244_addStatus.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

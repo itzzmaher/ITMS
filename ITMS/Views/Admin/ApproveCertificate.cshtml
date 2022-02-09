@@ -1,0 +1,32 @@
+﻿@model IEnumerable<tblGuiderCertificate>
+
+<div class="card-body">
+    <div id="v-card" class="row justify-content-center" style="margin-top: 44px;">
+        <div class="col-md-8 ">
+            <table id="datatablesSimple">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>City</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ var i = 1;
+                        foreach (var item in Model)
+                        {
+
+                            <tr>
+                                <td>@i </td>
+                                <td>@item.User.Name</td>
+                                <td>@item.City.CityName</td>
+                                <td><a asp-controller="Admin" asp-action="ApplicantInfo" asp-route-id="@item.GuId" class="btn btn-outline-secondary">Modify</a></td>
+                            </tr>
+                            i++;
+                        } }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

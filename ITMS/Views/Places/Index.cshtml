@@ -1,0 +1,66 @@
+﻿<div class="card-body">
+    <div class="card text-center o-hidden shadow-lg" style="margin-top: 44px;">
+
+
+
+        <div class="card-deck">
+
+            @{
+                IEnumerable<tblPlaces> Places = ViewData["Places"] as IEnumerable<tblPlaces>;
+                var i = 1;
+                foreach (var item in Places)
+                {
+
+                        <div class="col-md-4">
+                            <div class="card">
+                                <img src="@("~/Images/"+item.ImgName)" asp-append-version="true" width="250px" height="250px">
+                                <div class="card-body">
+                                    <h5 class="card-title">@item.Name</h5>
+                                    <p class="card-text">@item.Category.CategoryName</p>
+
+                                </div>
+                            </div>
+                        </div>
+                    i++;
+                } }
+        </div>
+    </div>
+</div>
+    @*<div class="card-body">
+            <div id="v-card" class="row justify-content-center" style="margin-top: 44px;">
+                <div class="col-md-8 ">
+                    <table id="datatablesSimple">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Place Name</th>
+                                <th>Description</th>
+                                <th>Creation Date</th>
+                                <th>Picture</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                IEnumerable<tblPlaces> Places = ViewData["Places"] as IEnumerable<tblPlaces>;
+                                var i = 1;
+                                foreach (var item in Places)
+                                {
+
+                                    <tr>
+                                        <td>@i </td>
+                                        <td>@item.Name</td>
+                                        <td>@item.Description</td>
+                                        <td>@item.CreationDate</td>
+                                        <td>
+                                            <img src="@("~/Images/"+item.ImgName)" asp-append-version="true" width="250px" height="250px" />
+                                        </td>
+
+                                    </tr>
+                                    i++;
+                                } }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>*@

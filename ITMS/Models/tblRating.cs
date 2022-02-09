@@ -14,5 +14,7 @@ namespace ITMS.Models
         public tblPlaces Places { get; set; }
         public int UserId { get; set; }
         public tblUsers User { get; set; }
+        public bool IsDeleted { get; set; }
+        public Guid GuId { get; set; }
     }
 }

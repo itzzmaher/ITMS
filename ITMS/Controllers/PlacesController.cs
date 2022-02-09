@@ -9,11 +9,15 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using ITMS.Repository;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ITMS.Controllers
 {
     public class PlacesController : Controller
     {
+        AccountRepository AccountRep = new AccountRepository();
         PlacesRepository PlaceRepository = new PlacesRepository();
         public IActionResult ViewPlaces()
         {
@@ -39,5 +43,18 @@ namespace ITMS.Controllers
             ViewData["Places"] = PlaceRepository.getPlaceByCategory(category);
             return View();
         }
+        [Authorize(Roles = "Admin,SuperAdmin")]
+        public IActionResult GuiderApplication()
+        {
+            ViewData["CityId"] = new SelectList(new PlacesRepository().getAllCities(), "Id", "CityName");
+            return View();
+        }
+        [HttpPost]
+        public IActionResult GuiderApplication(tblGuiderCertificate certificateInfo , IFormFile ifile)
+        {
+            Task Task = AccountRep.addCertificateDataAsync(certificateInfo, ifile, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            return View();
+        }
+
     }
 }

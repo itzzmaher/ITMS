@@ -4,14 +4,16 @@ using ITMS.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ITMS.Migrations
 {
     [DbContext(typeof(SystemContext))]
-    partial class SystemContextModelSnapshot : ModelSnapshot
+    [Migration("20220212232055_AddCertificate")]
+    partial class AddCertificate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,21 +36,6 @@ namespace ITMS.Migrations
                     b.ToTable("tblCategory");
                 });
 
-            modelBuilder.Entity("ITMS.Models.tblCertificate_status", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("StatusName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("tblCertificate_status");
-                });
-
             modelBuilder.Entity("ITMS.Models.tblCity", b =>
                 {
                     b.Property<int>("Id")
@@ -62,42 +49,6 @@ namespace ITMS.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("tblCity");
-                });
-
-            modelBuilder.Entity("ITMS.Models.tblGuiderCertificate", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CityId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ExpireDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("GuId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ImgName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("StatusId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CityId");
-
-                    b.HasIndex("StatusId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("tblGuiderCertificate");
                 });
 
             modelBuilder.Entity("ITMS.Models.tblPlaces", b =>
@@ -225,25 +176,6 @@ namespace ITMS.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("tblUsers");
-                });
-
-            modelBuilder.Entity("ITMS.Models.tblGuiderCertificate", b =>
-                {
-                    b.HasOne("ITMS.Models.tblCity", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ITMS.Models.tblCertificate_status", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId");
-
-                    b.HasOne("ITMS.Models.tblUsers", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("ITMS.Models.tblPlaces", b =>

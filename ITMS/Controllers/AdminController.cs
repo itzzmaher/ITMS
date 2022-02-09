@@ -14,6 +14,8 @@ namespace ITMS.Controllers
     public class AdminController : Controller
     {
         PlacesRepository PlaceRepository = new PlacesRepository();
+        AccountRepository AccountRep = new AccountRepository();
+
         public IActionResult Index()
         {
             return View (PlaceRepository.getAllplaces());
@@ -27,7 +29,6 @@ namespace ITMS.Controllers
         [HttpPost]
         public IActionResult AddPlace(tblPlaces PlaceInfo, IFormFile ifile)
         {
-            string imgExt = Path.GetExtension(PlaceInfo.ImgName);
             Task task = PlaceRepository.addPlaceAsync(PlaceInfo, ifile);
             return View();
         }
@@ -48,6 +49,25 @@ namespace ITMS.Controllers
         {
             PlaceRepository.deletePlaceAsync(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult ApproveCertificate()
+        {
+             return View(AccountRep.viewAllWaitingCertificate());
+        }
+        public IActionResult ApplicantInfo(Guid id)
+        {
+            return View(AccountRep.getApplicantInfo(id));
+        }
+        public IActionResult Approve (Guid id)
+        {
+            int result = AccountRep.ApproveApplication(id);
+            return RedirectToAction(nameof(ApproveCertificate));
+        }
+        public IActionResult Deny(Guid id)
+        {
+            int result = AccountRep.DenyApplication(id);
+            return RedirectToAction(nameof(ApproveCertificate));
         }
     }
 }

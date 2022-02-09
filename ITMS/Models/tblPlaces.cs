@@ -18,5 +18,6 @@ namespace ITMS.Models
         public tblCategory Category { get; set; }
         public int CityId { get; set; }
         public tblCity City { get; set; }
+        public string location { get; set; }
     }
 }

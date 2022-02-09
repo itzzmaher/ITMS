@@ -31,13 +31,18 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <label class="col-form-label"> Description</label>
-                            <input type="text" asp-for="Description" class="form-control" />
+                            <label class="col-form-label"> Google Maps Location </label>
+                            <input type="url" asp-for="location" class="form-control" />
                         </div>
+
                         <div class="col-md-4">
                             <label class="col-form-label">Picture</label>
                             <input type="file" name="ifile" />
                         </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-form-label"> Description</label>
+                        <textarea id="summernote" asp-for="Description"></textarea>
                     </div>
                     <div class="row">
                         <div class="col-md-12 " style="text-align: left; margin-top: 30px;">

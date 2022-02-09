@@ -4,14 +4,16 @@ using ITMS.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ITMS.Migrations
 {
     [DbContext(typeof(SystemContext))]
-    partial class SystemContextModelSnapshot : ModelSnapshot
+    [Migration("20220215063221_AddCertificate2")]
+    partial class AddCertificate2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,21 +34,6 @@ namespace ITMS.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("tblCategory");
-                });
-
-            modelBuilder.Entity("ITMS.Models.tblCertificate_status", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("StatusName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("tblCertificate_status");
                 });
 
             modelBuilder.Entity("ITMS.Models.tblCity", b =>
@@ -83,8 +70,8 @@ namespace ITMS.Migrations
                     b.Property<string>("ImgName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("StatusId")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsValid")
+                        .HasColumnType("bit");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -92,8 +79,6 @@ namespace ITMS.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CityId");
-
-                    b.HasIndex("StatusId");
 
                     b.HasIndex("UserId");
 
@@ -234,10 +219,6 @@ namespace ITMS.Migrations
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("ITMS.Models.tblCertificate_status", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId");
 
                     b.HasOne("ITMS.Models.tblUsers", "User")
                         .WithMany()

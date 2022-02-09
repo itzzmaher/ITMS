@@ -40,6 +40,7 @@ namespace ITMS.Repository
                 place.Description = PlaceInfo.Description;
                 place.IsDeleted = PlaceInfo.IsDeleted;
                 place.CreationDate = PlaceInfo.CreationDate;
+                place.location = PlaceInfo.location;
                 if (place.ImgName != null)
                 {
                     
@@ -62,23 +63,33 @@ namespace ITMS.Repository
         }
         public void deletePlaceAsync(Guid id)
         {
+            //tblPlaces placeInfo = _context.tblPlaces.SingleOrDefault(S => S.GuId == id);
+            //if (placeInfo.ImgName != null)
+            //{
+            //    var CurrentImage = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Images", placeInfo.ImgName);
+            //    _context.tblPlaces.Remove(placeInfo);
+            //    if (_context.SaveChanges() > 0)
+            //    {
+            //        if (System.IO.File.Exists(CurrentImage))
+            //        {
+            //            System.IO.File.Delete(CurrentImage);
+            //        }
+            //    }
+            //}
             tblPlaces placeInfo = _context.tblPlaces.SingleOrDefault(S => S.GuId == id);
-            if (placeInfo.ImgName != null)
-            {
-                var CurrentImage = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Images", placeInfo.ImgName);
-                _context.tblPlaces.Remove(placeInfo);
-                if (_context.SaveChanges() > 0)
-                {
-                    if (System.IO.File.Exists(CurrentImage))
-                    {
-                        System.IO.File.Delete(CurrentImage);
-                    }
-                }
-            }
+            placeInfo.IsDeleted = true;
+            _context.Update(placeInfo);
+            _context.SaveChanges();
+
+        }
+        public string getAddress (Guid id)
+        {
+            var location = _context.tblPlaces.SingleOrDefault(P => P.GuId == id);
+            return location.location;
         }
         public IEnumerable<tblPlaces> getAllplaces()
         {
-           return _context.tblPlaces.Include(U => U.Category).Include(S => S.City);
+           return _context.tblPlaces.Include(U => U.Category).Include(S => S.City).Where(P => P.IsDeleted == false);
         }
         public IEnumerable<tblCity> getAllCities()
         {
@@ -118,6 +129,7 @@ namespace ITMS.Repository
             }
                 return sum / i;
         }
+
         
     }
 }

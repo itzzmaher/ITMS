@@ -49,12 +49,74 @@ namespace ITMS.Repository
         #endregion Encryption
         public tblUsers GetAccountsForLogin(tblUsers userinfo)
         {
-
-
             return _context.tblUsers.Include(R => R.Role).SingleOrDefault(U => U.Email == userinfo.Email && U.Password == Encrypt(userinfo.Password));
 
         }
+        public async Task<int> addCertificateDataAsync(tblGuiderCertificate CerInfo , IFormFile ifile , int userID)
+        {
+            try
+            {
+                CerInfo.GuId = Guid.NewGuid();
+                CerInfo.UserId = userID;
+                var saveimg = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Images", ifile.FileName);
+                var stream = new FileStream(saveimg, FileMode.Create);
+                await ifile.CopyToAsync(stream);
+                CerInfo.ImgName = ifile.FileName;
 
+                 _context.Add(CerInfo);
+                 _context.SaveChanges();
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        }
+
+        public IEnumerable<tblGuiderCertificate> viewAllWaitingCertificate()
+        {
+            return _context.tblGuiderCertificate.Include(S => S.Status).Include(U => U.User).Include(C => C.City).Where(SC => SC.StatusId == 1);
+        }
+        public tblGuiderCertificate getApplicantInfo(Guid id)
+        {
+            return _context.tblGuiderCertificate.Include(S => S.Status).Include(U => U.User).Include(C => C.City).SingleOrDefault(SC => SC.GuId == id);
+        }
+
+        public int ApproveApplication(Guid id)
+        {
+            try
+            {
+                tblGuiderCertificate CerInfo = _context.tblGuiderCertificate.SingleOrDefault(SC => SC.GuId == id);
+                tblUsers UserInfo = _context.tblUsers.SingleOrDefault(U => U.Id == CerInfo.UserId);
+                UserInfo.RoleId = 2;
+                _context.Update(UserInfo);
+                _context.SaveChanges();
+                CerInfo.StatusId = 2;
+                _context.Update(CerInfo);
+                _context.SaveChanges();
+                return 1;
+            }
+            catch (Exception ss)
+            {
+                return 0;
+            }
+        }
+        public int DenyApplication(Guid id)
+        {
+            try
+            {
+                tblGuiderCertificate CerInfo = _context.tblGuiderCertificate.SingleOrDefault(SC => SC.GuId == id);
+                
+                CerInfo.StatusId = 3;
+                _context.Update(CerInfo);
+                _context.SaveChanges();
+                return 1;
+            }
+            catch (Exception ss)
+            {
+                return 0;
+            }
+        }
     }
     
 }
