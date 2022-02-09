@@ -5,6 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
     <title>Eterna Bootstrap Template - Index</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
@@ -78,12 +79,12 @@
                     {
                     }
                 }
-            </ul>
-        </li>
+                        </ul>
+                    </li>
 
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li><a href="/Account/Logout">logout</a></li>
+                    <li><a href="/Account/Logout">logout</a></li>
 
                     }
                     else
@@ -99,8 +100,8 @@
     </header><!-- End Header -->
     <main>
 
-        @RenderBody()
-    </main>
+            @RenderBody()
+        </main>
     <!-- ======= Footer ======= -->
     <footer id="footer">
 

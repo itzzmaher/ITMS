@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\assets\**" />
+    <Content Remove="wwwroot\assets\**" />
+    <EmbeddedResource Remove="wwwroot\assets\**" />
+    <None Remove="wwwroot\assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Migrations\20220118233319_add-place.cs" />
     <Compile Remove="Migrations\20220118233319_add-place.Designer.cs" />
   </ItemGroup>
