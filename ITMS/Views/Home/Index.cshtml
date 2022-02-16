@@ -2,7 +2,65 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section id="hero">
+    <div class="hero-container">
+        <div id="heroCarousel" data-bs-interval="5000" class="carousel slide carousel-fade" data-bs-ride="carousel">
+
+            <ol class="carousel-indicators" id="hero-carousel-indicators"></ol>
+
+            <div class="carousel-inner" role="listbox">
+
+                <!-- Slide 1 -->
+                <div class="carousel-item active" style="background: url(https://serving.photos.photobox.com/3693407362f3d233647c690a27c5e7858c398cadd0316411a811f34004571d6f76971030.jpg)">
+                    <div class="carousel-container">
+                        <div class="carousel-content">
+                            <h2 class="animate__animated animate__fadeInDown"><span style="color:black">Welcome to </span><span>ITMS</span></h2>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!-- End Hero -->
+
+<main id="main">
+
+    <!-- ======= Featured Section ======= -->
+    <section id="featured" class="featured">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="icon-box">
+                        <i class="bi bi-geo-alt"></i>
+                        <h3><a href="/Places/ViewPlaces">Tourist Sites</a></h3>
+                        <p>
+                            Discover all the differnent sites which you can visit in Saudi Arabia.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 mt-4 mt-lg-0">
+                    <div class="icon-box">
+                        <i class="bi bi-people-fill"></i>
+                        <h3><a href="">View Guiders</a></h3>
+                        <p>
+                         Get in contact with the certified guiders. They have all the knowledge and expertise in differenet areas.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 mt-4 mt-lg-0">
+                    <div class="icon-box">
+                        <i class="bi bi-instagram"></i>
+                        <h3><a href="">Share the Moment</a></h3>
+                        <p>
+                            Share the moment about the places you visited and browse through the posts.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section><!-- End Featured Section -->
+
+</main><!-- End #main -->

@@ -29,7 +29,11 @@ namespace ITMS.Controllers
         [HttpPost]
         public IActionResult AddPlace(tblPlaces PlaceInfo, IFormFile ifile)
         {
-            Task task = PlaceRepository.addPlaceAsync(PlaceInfo, ifile);
+            int result = PlaceRepository.AddPlaceAsync(PlaceInfo, ifile);
+            if (result == 1)
+                ViewData["Successful"] = "Place Added Successfully";
+            else
+                ViewData["Falied"] = "An Error Occurred while processing your request, please try again Later";
             return View();
         }
         public IActionResult EditPlace(Guid id)
@@ -42,32 +46,57 @@ namespace ITMS.Controllers
         public IActionResult EditPlace(tblPlaces PlaceInfo, IFormFile ifile)
         {
             string imgExt = Path.GetExtension(PlaceInfo.ImgName);
-            PlaceRepository.EditPlace(PlaceInfo, ifile);
-            return RedirectToAction(nameof(Index));
+            int result = PlaceRepository.EditPlace(PlaceInfo, ifile);
+            if (result == 1)
+                ViewData["Successful"] = "Place info was modified Successfully";
+            else
+                ViewData["Falied"] = "An Error Occurred while processing your request, please try again Later";
+            return View();
         }
         public IActionResult DeletePlace(Guid id)
         {
-            PlaceRepository.deletePlaceAsync(id);
-            return RedirectToAction(nameof(Index));
+            int result = PlaceRepository.deletePlace(id);
+            if (result == 1)
+            {
+                ViewData["Successful"] = "Place info was deleted Successfully";
+                return RedirectToAction("Index", "Admin");
+            }
+            else
+            {
+                ViewData["Falied"] = "An Error Occurred while processing your request, please try again Later";
+                return RedirectToAction("Index", "Admin");
+            }
+
         }
 
         public IActionResult ApproveCertificate()
         {
+            ViewData["CurrentDate"] = DateTime.Now;
              return View(AccountRep.viewAllWaitingCertificate());
         }
         public IActionResult ApplicantInfo(Guid id)
         {
+            ViewData["CurrentDate"] = DateTime.Now.ToString("yyyy/MMMM/dd");
             return View(AccountRep.getApplicantInfo(id));
         }
         public IActionResult Approve (Guid id)
         {
             int result = AccountRep.ApproveApplication(id);
-            return RedirectToAction(nameof(ApproveCertificate));
+            if (result == 1)
+                ViewData["Successful"] = "User has been approved Successfully";
+            else
+                ViewData["Falied"] = "An Error Occurred while processing your request, please try again Later";
+
+            return RedirectToAction("ApproveCertificate");
         }
         public IActionResult Deny(Guid id)
         {
             int result = AccountRep.DenyApplication(id);
-            return RedirectToAction(nameof(ApproveCertificate));
+            if (result == 1)
+                ViewData["Successful"] = "User has been denied Successfully";
+            else
+                ViewData["Falied"] = "An Error Occurred while processing your request, please try again Later";
+            return RedirectToAction("ApproveCertificate");
         }
     }
 }

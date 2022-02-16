@@ -1,7 +1,34 @@
-﻿
+﻿<script>
+                @{
+                if (@ViewData["Successful"] != null)
+                {
+                    <Text>
+                    var result = '@Html.Raw(ViewData["Successful"])';
+                    Swal.fire(result,'','success')
+                        .then(
+                            function () {
+                                window.location.href = '@Url.Action("Index", "Admin")';
+                            }
+                        );
+                    </Text>
+                    }
+                   else if(@ViewData["Falied"] != null )
+                    {
+                    <Text>
+                        var result = '@Html.Raw(ViewData["Falied"])';
+                        Swal.fire(result,'','error')
+                        .then(
+                            function () {
+                                window.location.href = '@Url.Action("Index", "Admin")';
+                            }
+                        );
+                    </Text>
+                    }
+            }
+</script>
 @model ITMS.Models.tblPlaces
-    <link href="~/lib/summernote-0.8.18-dist/summernote-lite.css" rel="stylesheet" />
-    <script src="~/lib/summernote-0.8.18-dist/summernote-lite.js"></script>
+<link href="~/lib/summernote-0.8.18-dist/summernote-lite.css" rel="stylesheet" />
+<script src="~/lib/summernote-0.8.18-dist/summernote-lite.js"></script>
 <div id="v-card" class="d-flex justify-content-center" style="margin-top: 100px;">
     <div class="card col-md-6">
         <div class="card-header">
@@ -40,14 +67,14 @@
 
                     <div class="col-md-4">
                         <label class="col-form-label">Picture</label>
-                        <input type="file" name="ifile" />
+                        <input class="form-control" type="file" name="ifile" />
                     </div>
                 </div>
                 <div class="row">
-                        <label class="col-form-label"> Description</label>
-                        <textarea id="summernote" asp-for="Description"></textarea>
-                    </div>
-                    <div class="row">
+                    <label class="col-form-label"> Description</label>
+                    <textarea id="summernote" asp-for="Description"></textarea>
+                </div>
+                <div class="row">
                     <div class="col-md-12 " style="text-align: left; margin-top: 30px;">
                         <button type="submit" class="btn btn-dark btn-search" onclick=" return Valdation()"> Add </button>
                     </div>
@@ -57,18 +84,18 @@
         </div>
     </div>
 </div>
-    <script type="text/javascript">
-        $('#summernote').summernote({
-            fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24'],
-            toolbar: [
-                // [groupName, [list of button]]
-                ['style', ['bold', 'italic', 'underline', 'clear']],
-                ['font', ['strikethrough', 'superscript', 'subscript']],
-                ['fontsize', ['fontsize']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['height', ['height']]
-            ]
-        });
-    </script>
+<script type="text/javascript">
+    $('#summernote').summernote({
+        fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24'],
+        toolbar: [
+            // [groupName, [list of button]]
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font', ['strikethrough', 'superscript', 'subscript']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['height', ['height']]
+        ]
+    });
+</script>

@@ -1,4 +1,31 @@
 ﻿@model ITMS.Models.tblPlaces
+<script>
+                @{
+                if (@ViewData["Successful"] != null)
+                {
+                    <Text>
+                    var result = '@Html.Raw(ViewData["Successful"])';
+                    Swal.fire(result,'','success')
+                        .then(
+                            function () {
+                                window.location.href = '@Url.Action("Index", "Admin")';
+                            }
+                        );
+                    </Text>
+                    }
+                   else if(@ViewData["Falied"] != null )
+                    {
+                    <Text>
+                        Swal.fire(result,'','error')
+                        .then(
+                            function () {
+                                window.location.href = '@Url.Action("Index", "Admin")';
+                            }
+                        );
+                    </Text>
+                    }
+            }
+</script>
     <link href="~/lib/summernote-0.8.18-dist/summernote-lite.css" rel="stylesheet" />
     <script src="~/lib/summernote-0.8.18-dist/summernote-lite.js"></script>
     <div id="v-card" class="d-flex justify-content-center" style="margin-top: 100px;">
@@ -34,21 +61,25 @@
                             <label class="col-form-label"> Google Maps Location </label>
                             <input type="url" asp-for="location" class="form-control" />
                         </div>
-
-                        <div class="col-md-4">
-                            <label class="col-form-label">Picture</label>
-                            <input type="file" name="ifile" />
-                        </div>
                     </div>
                     <div class="row">
-                        <label class="col-form-label"> Description</label>
-                        <textarea id="summernote" asp-for="Description"></textarea>
+                        <img class="img-fluid" src="@("~/Images/" + Model.ImgName)" asp-append-version="true" width="750px" height="500px">
                     </div>
-                    <div class="row">
-                        <div class="col-md-12 " style="text-align: left; margin-top: 30px;">
-                            <button type="submit" class="btn btn-dark btn-search" onclick=" return Valdation()"> Add </button>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="col-form-label">Picture</label>
+                                <input class="form-control" asp-for="ImgName" type="file" name="ifile" />
+                            </div>
                         </div>
-                    </div>
+                        <div class="row">
+                            <label class="col-form-label"> Description</label>
+                            <textarea id="summernote" asp-for="Description"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 " style="text-align: left; margin-top: 30px;">
+                                <button type="submit" class="btn btn-dark btn-search" onclick=" return Valdation()"> Add </button>
+                            </div>
+                        </div>
                 </form>
             </div>
         </div>

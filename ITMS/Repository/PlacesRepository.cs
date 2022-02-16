@@ -12,23 +12,29 @@ namespace ITMS.Repository
     public class PlacesRepository : BaseContext
     {
 
-        public async Task addPlaceAsync(tblPlaces PlaceInfo, IFormFile ifile)
+        public int AddPlaceAsync(tblPlaces PlaceInfo, IFormFile ifile)
         {
+            try { 
             PlaceInfo.GuId = Guid.NewGuid();
             PlaceInfo.IsDeleted = false;
             var saveimg = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Images", ifile.FileName);
             var stream = new FileStream(saveimg, FileMode.Create);
-            await ifile.CopyToAsync(stream);
+            ifile.CopyToAsync(stream);
             PlaceInfo.ImgName = ifile.FileName;
-
-            await _context.AddAsync(PlaceInfo);
-            await _context.SaveChangesAsync();
-            //_context.Add(PlaceInfo);
-            //_context.SaveChanges();
+            _context.AddAsync(PlaceInfo);
+            _context.SaveChangesAsync();
+                //_context.Add(PlaceInfo);
+                //_context.SaveChanges();
+                return 1;
+            }
+            catch
+            {
+                return 0;
+            }
 
         }
 
-        public void EditPlace(tblPlaces PlaceInfo, IFormFile ifile)
+        public int EditPlace(tblPlaces PlaceInfo, IFormFile ifile)
         {
             try
             {
@@ -55,31 +61,28 @@ namespace ITMS.Repository
                 //_context.SaveChanges();
                 _context.tblPlaces.Update(place);
                 _context.SaveChanges();
+                return 1;
             }
             catch (Exception ec)
             {
-
+                return 0;
             }
         }
-        public void deletePlaceAsync(Guid id)
+        public int deletePlace(Guid id)
         {
-            //tblPlaces placeInfo = _context.tblPlaces.SingleOrDefault(S => S.GuId == id);
-            //if (placeInfo.ImgName != null)
-            //{
-            //    var CurrentImage = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Images", placeInfo.ImgName);
-            //    _context.tblPlaces.Remove(placeInfo);
-            //    if (_context.SaveChanges() > 0)
-            //    {
-            //        if (System.IO.File.Exists(CurrentImage))
-            //        {
-            //            System.IO.File.Delete(CurrentImage);
-            //        }
-            //    }
-            //}
-            tblPlaces placeInfo = _context.tblPlaces.SingleOrDefault(S => S.GuId == id);
-            placeInfo.IsDeleted = true;
-            _context.Update(placeInfo);
-            _context.SaveChanges();
+            try
+            {
+                tblPlaces placeInfo = _context.tblPlaces.SingleOrDefault(S => S.GuId == id);
+                placeInfo.IsDeleted = true;
+                _context.Update(placeInfo);
+                _context.SaveChanges();
+                return 1;
+            }
+            catch (Exception ec)
+            {
+                return 0;
+            }
+
 
         }
         public string getAddress (Guid id)

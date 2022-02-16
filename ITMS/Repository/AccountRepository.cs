@@ -14,13 +14,16 @@ namespace ITMS.Repository
 {
     public class AccountRepository : BaseContext
     {
-        public int AddUser (tblUsers UserInfo)
+        public int AddUser(tblUsers UserInfo)
         {
             try
             {
                 tblUsers userInfoByEmail = _context.tblUsers.AsNoTracking().SingleOrDefault(U => U.Email == UserInfo.Email);
                 if (userInfoByEmail != null)
-                    return 2;  // user is already there
+                    return 2;  // user is already this email
+                tblUsers userInfoByNumber = _context.tblUsers.AsNoTracking().SingleOrDefault(U => U.Email == UserInfo.Phone);
+                if (userInfoByNumber != null)
+                    return 3;  // user is already this email
                 UserInfo.GuId = Guid.NewGuid();
                 UserInfo.Password = Encrypt(UserInfo.Password);
                 UserInfo.IsActive = true;
@@ -31,7 +34,7 @@ namespace ITMS.Repository
             }
             catch
             {
-                return 0; //Failed
+                return 0; //Failed to add user
             }
         }
         #region Encryption
@@ -52,7 +55,7 @@ namespace ITMS.Repository
             return _context.tblUsers.Include(R => R.Role).SingleOrDefault(U => U.Email == userinfo.Email && U.Password == Encrypt(userinfo.Password));
 
         }
-        public async Task<int> addCertificateDataAsync(tblGuiderCertificate CerInfo , IFormFile ifile , int userID)
+        public async Task<int> addCertificateDataAsync(tblGuiderCertificate CerInfo, IFormFile ifile, int userID)
         {
             try
             {
@@ -63,8 +66,8 @@ namespace ITMS.Repository
                 await ifile.CopyToAsync(stream);
                 CerInfo.ImgName = ifile.FileName;
 
-                 _context.Add(CerInfo);
-                 _context.SaveChanges();
+                _context.Add(CerInfo);
+                _context.SaveChanges();
                 return 1;
             }
             catch (Exception ex)
@@ -106,7 +109,7 @@ namespace ITMS.Repository
             try
             {
                 tblGuiderCertificate CerInfo = _context.tblGuiderCertificate.SingleOrDefault(SC => SC.GuId == id);
-                
+
                 CerInfo.StatusId = 3;
                 _context.Update(CerInfo);
                 _context.SaveChanges();
@@ -117,7 +120,59 @@ namespace ITMS.Repository
                 return 0;
             }
         }
+        public tblUsers GetUserByGuId(Guid id)
+        {
+            return _context.tblUsers.SingleOrDefault(U => U.GuId == id);
+        }
+        public tblUsers GetUserById(int id)
+        {
+            return _context.tblUsers.SingleOrDefault(U => U.Id == id);
+        }
+        public int ChangeUserinfo(tblUsers userinfo)
+        {
+            try
+            {
+                tblUsers userInfoByGuid = GetUserByGuId(userinfo.GuId);
+                userInfoByGuid.Email = userinfo.Email;
+                userInfoByGuid.Name = userinfo.Name;
+                userInfoByGuid.Phone = userinfo.Phone;
+                _context.Update(userInfoByGuid);
+                _context.SaveChanges();
+                return 1;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+        public int CheckUserPassword(int id, string Password)
+        {
+            tblUsers UserInfo = _context.tblUsers.SingleOrDefault(U => U.Password == Password && U.Id == id);
+            if (UserInfo == null)
+                return 0;
+            else
+                return 1;
+        }
+        public int ChangePassword(int AccountID, string password)
+        {
+            try
+            {
+                tblUsers UserInfoByID = GetUserById(AccountID);
+                UserInfoByID.Password = password;
+                _context.Update(UserInfoByID);
+                _context.SaveChanges();
+                return 1;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+        public int checkForGuider(int Id)
+        {
+                int RegisterInfoByUserNameCount = _context.tblGuiderCertificate.Where(R => R.UserId == Id).ToList().Count();
+                return RegisterInfoByUserNameCount;
+        }
     }
-    
 }
 

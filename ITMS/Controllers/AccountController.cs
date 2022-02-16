@@ -23,10 +23,41 @@ namespace ITMS.Controllers
         {
             return View();
         }
-        [HttpPost]
-        public IActionResult SignUp(tblUsers userinfo)
+        public IActionResult Profile()
         {
-            AccountRepository.AddUser(userinfo);
+
+            return View(AccountRepository.GetUserById(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));
+        }
+        [HttpPost]
+        public IActionResult Profile(tblUsers userinfo)
+        {
+            int result = AccountRepository.ChangeUserinfo(userinfo);
+            if (result == 1)
+                ViewData["Successful"] = "User info modified Successfully.";
+            else
+                ViewData["Failed"] = "An Error Occurred while processing your request, please try again Later";
+            return View();
+        }
+        [HttpPost]
+        public IActionResult SignUp(tblUsers userinfo,string ConfirmedPassword)
+        {
+
+            if (userinfo.Password != ConfirmedPassword)
+            {
+                ViewBag.Error = 1;
+            }
+            else
+            {
+                int result = AccountRepository.AddUser(userinfo);
+                if (result == 1)
+                    ViewData["Successful"] = "User added Successfully.";
+                else if (result == 2)
+                    ViewData["EmailFound"] = "There is already a user with this email.";
+                else if (result == 3)
+                    ViewData["PhoneFound"] = "There is already a user with this phone.";
+                if (result == 0)
+                    ViewData["Failed"] = "An Error Occurred while processing your request, please try again Later";
+            }
             return View();
         }
         #region Login/Logout
@@ -92,11 +123,60 @@ namespace ITMS.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction(nameof(AccountController.Login), "Account");
+            return RedirectToAction("Index", "Home");
         }
 
 
         #endregion Login/Logout
+        public IActionResult ChangePassword()
+        {
 
+            return View(AccountRepository.GetUserById(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ChangePassword(tblUsers UserInfo, string NewPassword, string ConfirmedPassword)
+        {
+            try
+            {
+                int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                string OldEncryptedPassword = AccountRepository.Encrypt(UserInfo.Password);
+                int CheckResult = AccountRepository.CheckUserPassword(id, OldEncryptedPassword);
+                if (CheckResult == 0)
+                {
+                    ViewBag.Error = 2;
+                }
+                else if (NewPassword != ConfirmedPassword)
+                {
+                    ViewBag.Error = 1;
+                }
+                else
+                {
+                    string EncryptedPassword = AccountRepository.Encrypt(NewPassword);
+                    int check = AccountRepository.ChangePassword(id, EncryptedPassword);
+                    if (check == 1)
+                        ViewData["Successful"] = "Your Password has been changed. You will be logged out";
+                    else
+                        ViewData["Falied"] = "An Error Occurred while processing your request, please try again Later";
+                }
+            }
+            catch
+            {
+                ViewData["Falied"] = "An Error Occurred while processing your request, please try again Later";
+            }
+            return View();
+        }
+        public IActionResult GuiderApplication()
+        {
+            ViewData["CityId"] = new SelectList(new PlacesRepository().getAllCities(), "Id", "CityName");
+            ViewData["CheckForUserApplication"] = AccountRepository.checkForGuider(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            return View();
+        }
+        [HttpPost]
+        public IActionResult GuiderApplication(tblGuiderCertificate certificateInfo, IFormFile ifile)
+        {
+            Task Task = AccountRepository.addCertificateDataAsync(certificateInfo, ifile, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            return View();
+        }
     }
 }

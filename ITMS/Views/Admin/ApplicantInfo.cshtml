@@ -1,7 +1,7 @@
 ﻿@model ITMS.Models.tblGuiderCertificate
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
-    <link rel="icon" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
+<link rel="icon" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
     body {
         background: #eee
@@ -61,20 +61,54 @@
             color: #8E24AA;
             font-size: 19px
         }
-
 </style>
 <div class="container mt-5">
     <div class="row d-flex justify-content-center">
         <div class="col-md-7">
             <div class="card p-3 py-4">
-                <div class="text-center"> <img src="@("~/Images/" + Model.ImgName)"  asp-append-version="true"  width="200" height="300"> </div>
+                <div class="text-center"> <img src="@("~/Images/" + Model.ImgName)" asp-append-version="true" width="200" height="300"> </div>
                 <div class="text-center mt-3">
                     <span class="bg-secondary p-1 px-4 rounded text-white">@Model.City.CityName</span>
-                    <h5 class="mt-2 mb-0">@Model.User.Name</h5> <span>Liscence Expire Date : @Model.ExpireDate.ToString("yyyy/MMMM/dd")</span>
-                    <div class="buttons"> <a asp-action="Approve" asp-controller="Admin" asp-route-id="@Model.GuId" class="btn btn-primary px-4">Approve</a> 
-                    <a asp-action="Deny" asp-controller="Admin" asp-route-id="@Model.GuId" class="btn btn-outline-primary px-4 ms-3">Deny</a> </div>
+                    <h5 class="mt-2 mb-0">@Model.User.Name</h5> <span> Liscence Expire Date : @Model.ExpireDate.ToString("yyyy/MMMM/dd")</span>
+                    <div class="buttons mt-2 mb-0">
+                        @{int res = DateTime.Compare(Model.ExpireDate, DateTime.Now);
+                            if (res > 0)
+                            {
+                                <a asp-action="Approve" asp-controller="Admin" asp-route-id="@Model.GuId" asp-route-status="Approve" class="btn btn-primary px-4">Approve</a>
+                                <a asp-action="Approve" asp-controller="Admin" asp-route-id="@Model.GuId" asp-route-status="Deny" class="btn btn-outline-primary px-4 ms-3">Deny</a>
+                            }
+                            else
+                            {
+                                <span> Liscence is Expired</span>
+                                <a asp-action="Approve" asp-controller="Admin" asp-route-id="@Model.GuId" asp-route-status="Deny" class="btn btn-outline-primary px-4 ms-3">Deny</a>
+                            }
+                        }
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+                @{
+                if (@ViewData["Successful"] != null)
+                {
+                    <Text>
+                    var result = '@Html.Raw(ViewData["Successful"])';
+                    Swal.fire(result,'','success')
+                        .then(
+                            function () {
+                                window.location.href = '@Url.Action("ApproveCertificate", "Admin")';
+                            }
+                        );
+                    </Text>
+                    }
+                   else if(@ViewData["Falied"] != null )
+                    {
+                    <Text>
+                        var result = '@Html.Raw(ViewData["Falied"])';
+                        Swal.fire(result,'','error')
+                    </Text>
+                    }
+            }
+</script>

@@ -14,7 +14,15 @@
     </style>
     @{var data = (tblPlaces)ViewData["PlaceInfo"]; }
 <div class="container">
-
+    @if (data == null )
+            {  
+    <div class="text-center">
+        <img src="~/Images/404_image.png" />
+        <h4 style="color:midnightblue;">This page doesn't exist.</h4>
+        <h4 style="color:midnightblue;">Click <a href="/Places/ViewPlaces">HERE</a> to go back  </h4 >
+    </div>
+            }
+            else { 
     <!-- Portfolio Item Heading -->
     <h1 class="my-4">
         <small>@data.Name</small>
@@ -45,13 +53,17 @@
     </div>
     <hr class="divider" />
     <div class="row top-buffer"></div>
+        IEnumerable<tblRating> Ratings = ViewData["Ratings"] as IEnumerable<tblRating>;
+        if (Ratings.Count() > 0)
+        {
+
 
     <h4>Average Rating : @ViewData["AverageRating"]</h4>
     <div class="row top-buffer"></div>
-    @{IEnumerable<tblRating> Ratings = ViewData["Ratings"] as IEnumerable<tblRating>;
-        <h4>Number of Ratings : @Ratings.Count()</h4>
+    
+        <h4>Number of Ratings : @Ratings.Count()</h4>}
         <!-- /.container -->
-        @if (User.Identity.IsAuthenticated)
+        if (User.Identity.IsAuthenticated)
         {
             <form asp-action="AddRating" id="form">
 

@@ -56,68 +56,101 @@
     ======================================================== -->
 </head>
 
-<!--<body>-->
-<!-- ======= Header ======= -->
-<!--<header id="header" class="d-flex align-items-center">
+<body>
+
+<header id="header" class="d-flex align-items-center">
     <div class="container d-flex justify-content-between align-items-center">
 
         <div class="logo">
-            <h1><a href="/">Eterna</a></h1>-->
-<!-- Uncomment below if you prefer to use an image logo -->
-<!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-<!--</div>
+            <h1><a href="/">ITMS</a></h1>
+ <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>
+</div>
+        <nav id="navbar" class="navbar">
+            <ul>
+                <li><a class="active" href="/">Home</a></li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="dropdown">
+                        <a href="#"><span>Admin</span> <i class="bi bi-chevron-right"></i></a>
+                        <ul>
+                            <li><a href="/admin">Edit Places</a></li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li><a href="/Admin/ApproveCertificate">View Guider Applications</a></li>
+                        </ul>
+                    </li>
+                }
+                @if (User.IsInRole("Tourist"))
+                {
+                    <li><a href="/Account/GuiderApplication">Become Guider</a></li>
+                }
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/Account/Profile">Profile</a></li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li><a class="dropdown-item" href="/Account/ChangePassword">Change Password</a></li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li><a class="dropdown-item" href="/Account/Logout">Logout</a></li>
 
-<nav id="navbar" class="navbar">
-    <ul>
-        <li><a class="active" href="/Places/ViewPlaces">Home</a></li>
-        <li><a href="/Admin">Admin</a></li>
-        <li class="dropdown">
-<a><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a><ul>
 
-    </ul>
-    <i class="bi bi-list mobile-nav-toggle"></i>
-</nav>-->
-<!-- .navbar -->
-<!--</div>
-</header>-->
-<!-- End Header -->
-<!--<main>
+                        </ul>
+                    </li>
+                }
+                else
+                {
+                    <li><a href="/Account/Login">Login</a></li>
+                }
 
-       
-    </main>-->
-<!-- ======= Footer ======= -->
-<!--<footer id="footer">
+                @*<li class="dropdown">
+            <a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
+            <ul>
+                <li><a href="#">Deep Drop Down 1</a></li>
+                <li><a href="#">Deep Drop Down 2</a></li>
+                <li><a href="#">Deep Drop Down 3</a></li>
+            </ul>
+        </li>*@
+            </ul>
+            <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav>
+
+</div>
+</header>
+
+<main>
+    @RenderBody()
+
+</main>
+
+<footer id="footer">
 
 
     <div class="container">
         <div class="copyright">
             &copy; Copyright <strong><span>Eterna</span></strong>. All Rights Reserved
         </div>
-        <div class="credits">-->
-<!-- All the links in the footer should remain intact. -->
-<!-- You can delete the links only if you purchased the pro version. -->
-<!-- Licensing information: https://bootstrapmade.com/license/ -->
-<!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/eterna-free-multipurpose-bootstrap-template/ -->
-<!--Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+        <div class="credits">
+
+Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
         </div>
     </div>
-</footer>-->
-<!-- End Footer -->
-<!--<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>-->
-<!-- Vendor JS Files -->
-<!--</body>-->
+</footer>
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-<body class="sb-nav-fixed">
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+</body>
+
+<!--<body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">-->
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="https://localhost:44387/">Activity System</a>
+        <!--<a class="navbar-brand ps-3" href="https://localhost:44387/">Activity System</a>-->
         <!-- Sidebar Toggle-->
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        <!--<button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>-->
         <!-- Navbar Search-->
-        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-        </form>
+        <!--<form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+        </form>-->
         <!-- Navbar-->
-        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <!--<ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
@@ -201,7 +234,7 @@
         <div id="layoutSidenav_content">
             <main>
 
-                @RenderBody()
+                
 
             </main>
             <footer class="py-4 bg-light mt-auto">
@@ -218,6 +251,6 @@
             </footer>
         </div>
     </div>
-</body>
+</body>-->
 
 </html>

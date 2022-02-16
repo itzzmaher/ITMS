@@ -1,5 +1,22 @@
 ﻿@model IEnumerable<tblPlaces>
-
+<script>
+                @{
+                if (@ViewData["Successful"] != null)
+                {
+                    <Text>
+                    var result = '@Html.Raw(ViewData["Successful"])';
+                    Swal.fire(result,'','success')
+                    </Text>
+                    }
+                   else if(@ViewData["Falied"] != null )
+                    {
+                    <Text>
+                        var result = '@Html.Raw(ViewData["Falied"])';
+                        Swal.fire(result,'','error')
+                    </Text>
+                    }
+            }
+</script>
 <div class="card-body">
     <div id="v-card" class="row justify-content-center" style="margin-top: 44px;">
         <div class="col-md-7 ">

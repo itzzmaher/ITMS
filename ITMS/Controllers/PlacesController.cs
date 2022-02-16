@@ -30,6 +30,11 @@ namespace ITMS.Controllers
             ViewData["Ratings"] = PlaceRepository.getAllRatingForPlace(id);
             ViewData["PlaceInfo"] = PlaceRepository.getPlaceInfo(id);
             ViewData["AverageRating"] = PlaceRepository.getAverageRating(id);
+            if (ViewData["PlaceInfo"] == null)
+            {
+                return View();
+            }
+                else
             return View();
         }
         [HttpPost]
@@ -43,18 +48,7 @@ namespace ITMS.Controllers
             ViewData["Places"] = PlaceRepository.getPlaceByCategory(category);
             return View();
         }
-        [Authorize(Roles = "Admin,SuperAdmin")]
-        public IActionResult GuiderApplication()
-        {
-            ViewData["CityId"] = new SelectList(new PlacesRepository().getAllCities(), "Id", "CityName");
-            return View();
-        }
-        [HttpPost]
-        public IActionResult GuiderApplication(tblGuiderCertificate certificateInfo , IFormFile ifile)
-        {
-            Task Task = AccountRep.addCertificateDataAsync(certificateInfo, ifile, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
-            return View();
-        }
+       
 
     }
 }
