@@ -170,8 +170,17 @@ namespace ITMS.Repository
         }
         public int checkForGuider(int Id)
         {
-                int RegisterInfoByUserNameCount = _context.tblGuiderCertificate.Where(R => R.UserId == Id).ToList().Count();
-                return RegisterInfoByUserNameCount;
+                tblGuiderCertificate RegisterStatus = _context.tblGuiderCertificate.SingleOrDefault(R => R.UserId == Id);
+                if (RegisterStatus.StatusId == 1)    
+                    return 1;
+                else
+                    return 0;
+        }
+        public tblGuiderCertificate GuiderInfo (int Id)
+        {
+            return _context.tblGuiderCertificate.Include(S => S.Status).Include(U => U.User).Include(C => C.City).SingleOrDefault(R => R.UserId == Id);
+
+
         }
     }
 }

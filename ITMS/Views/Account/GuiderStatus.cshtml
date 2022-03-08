@@ -1,0 +1,123 @@
+﻿@model ITMS.Models.tblGuiderCertificate
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
+<link rel="icon" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    body {
+        background: #eee
+    }
+
+    .card {
+        border: none;
+        position: relative;
+        overflow: hidden;
+        border-radius: 8px;
+        cursor: pointer
+    }
+
+        .card:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background-color: #e6bab3;
+            transform: scaleY(1);
+            transition: all 0.5s;
+            transform-origin: bottom
+        }
+
+        .card:after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background-color: #e96b56;
+            transform: scaleY(0);
+            transition: all 0.5s;
+            transform-origin: bottom
+        }
+
+        .card:hover::after {
+            transform: scaleY(1)
+        }
+
+    .fonts {
+        font-size: 11px
+    }
+
+    .social-list {
+        display: flex;
+        list-style: none;
+        justify-content: center;
+        padding: 0
+    }
+
+        .social-list li {
+            padding: 10px;
+            color: #e96b56;
+            font-size: 19px
+        }
+
+    .buttons a:nth-child(1) {
+        border: 1px solid #e96b56 !important;
+        color: #e96b56;
+        height: 40px
+    }
+
+        .buttons a:nth-child(1):hover {
+            border: 1px solid #e96b56 !important;
+            color: #fff;
+            height: 40px;
+            background-color: #e96b56
+        }
+
+    .buttons a:nth-child(2) {
+        border: 1px solid #e96b56 !important;
+        background-color: #e96b56;
+        color: #fff;
+        height: 40px
+    }
+        .buttons a:nth-child(2):hover {
+            border: 1px solid #e96b56 !important;
+            color: #e96b56;
+            height: 40px;
+            background-color: #fff
+        }
+</style>
+<div class="container mt-5">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-7">
+            <div class="card p-3 py-4">
+                <div class="text-center"> <img src="@("~/Images/" + Model.ImgName)" asp-append-version="true" width="200" height="300"> </div>
+                <div class="text-center mt-3">
+                    <span class="bg-secondary p-1 px-4 rounded text-white">@Model.City.CityName</span>
+                    <h5 class="mt-2 mb-0">@Model.User.Name</h5> <span> Liscence Expire Date : @Model.ExpireDate.ToString("yyyy/MMMM/dd")</span>
+                    <div class="buttons mt-2 mb-0">
+                        <div class="buttons">
+                            @if (Model.Status.StatusName == "Rejected")
+                            {
+                                <h2>Sorry, you applicatation were rejected</h2>
+                                <a asp-action="GuiderApplication"class="btn btn-outline-primary px-4">Re-Apply</a>
+                            }
+                            else if (Model.Status.StatusName == "Expired")
+                            {
+                                <h2>Your liscence is expired</h2>
+                                <a class="btn btn-outline-primary px-4" >Re-Apply</a>
+                            }
+                            else if (Model.Status.StatusName == "Waiting")
+                            {
+                                <h2>You already applied, it will be reviewed soon</h2>
+                                
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

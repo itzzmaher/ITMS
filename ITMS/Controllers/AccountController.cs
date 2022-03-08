@@ -178,5 +178,12 @@ namespace ITMS.Controllers
             Task Task = AccountRepository.addCertificateDataAsync(certificateInfo, ifile, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return View();
         }
+        public IActionResult GuiderStatus() {
+
+            
+            return View(AccountRepository.GuiderInfo(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));
+        }
+
+
     }
 }

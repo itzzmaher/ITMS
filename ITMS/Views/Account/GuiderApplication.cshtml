@@ -5,52 +5,59 @@
         @if (User.Identity.IsAuthenticated)
         {
             int check = (int)ViewData["CheckForUserApplication"];
-            if (check > 0)
+            if (check == 1)
             {
-                <h3 class="justify-content-center">You already applied for the guider</h3>
+        <div class="justify-content-center">
+            <div class="row">
+                <h3 style="margin-top: 20px; margin-bottom: 20px;">You already applied for the guider</h3>
+            </div>
+            <div class="row">
+                <h4>Click <a asp-action="GuiderStatus">Here</a> to view your application status</h4>
+            </div>
+            </div>
             }
             else
             {
-                <div class="card-header">
-                    <h3>Guider Application</h3>
-                </div>
-                <div class="card-body">
-                    <form asp-action="GuiderApplication" id="form" name="form1" enctype="multipart/form-data">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label class="col-form-label"> End Date of Lisence</label>
-                                <input class="form-control" type="date" asp-for="ExpireDate" />
-                            </div>
+            <div class="card-header">
+                <h3>Guider Application</h3>
+            </div>
+            <div class="card-body">
+                <form asp-action="GuiderApplication" id="form" name="form1" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="col-form-label"> End Date of Lisence</label>
+                            <input class="form-control" type="date" asp-for="ExpireDate" />
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label class="col-form-label">City</label>
-                                <select class="form-control" asp-items="ViewBag.CityId" asp-for="CityId"></select>
-                            </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="col-form-label">City</label>
+                            <select class="form-control" asp-items="ViewBag.CityId" asp-for="CityId"></select>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label class="col-form-label">Picture</label>
-                                <input class="form-control" type="file" name="ifile" />
-                            </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="col-form-label">Picture</label>
+                            <input class="form-control" type="file" name="ifile" />
                         </div>
-                        <div class="row">
-                            <div class="col-md-12 " style="text-align: left; margin-top: 30px;">
-                                <button type="submit" class="btn btn-dark btn-search" onclick=" return Valdation()"> Apply </button>
-                            </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 " style="text-align: left; margin-top: 30px;">
+                            <button type="submit" class="btn btn-dark btn-search" onclick=" return Valdation()"> Apply </button>
                         </div>
+                    </div>
 
-                    </form>
-                </div>
-                }
-        }
-        else
-        {
+                </form>
+            </div>
+            }
+            }
+            else
+            {
             <h2>
                 Please Login or Sign up to apply <a type="submit" class="btn btn-dark btn-search" asp-controller="Account" asp-action="LogIn">Login</a>
             </h2>
-        }
-    </div>
+            }
+        </div>
 
 
 </div>

@@ -33,6 +33,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="wwwroot\assets\img\Logo.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="DocuSign.eSign.dll" Version="5.5.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.0">
