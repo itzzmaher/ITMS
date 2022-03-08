@@ -163,8 +163,16 @@ namespace ITMS.Controllers
         public IActionResult GuiderApplication()
         {
             ViewData["CityId"] = new SelectList(new PlacesRepository().getAllCities(), "Id", "CityName");
-            ViewData["CheckForUserApplication"] = AccountRepository.checkForGuider(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
-            return View();
+            int result = AccountRepository.checkForGuider(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            if (result == 1)
+            {
+                return RedirectToAction("GuiderStatus", "Account");
+            }
+            else
+            {
+                ViewData["CheckForUserApplication"] = result;
+                return View();
+            }
         }
         [HttpPost]
         public IActionResult GuiderApplication(tblGuiderCertificate certificateInfo, IFormFile ifile)

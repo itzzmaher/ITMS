@@ -65,8 +65,7 @@
     .buttons a:nth-child(1) {
         border: 1px solid #e96b56 !important;
         color: #e96b56;
-        height: 40px;
-        background-color: #fff
+        height: 40px
     }
 
         .buttons a:nth-child(1):hover {
@@ -97,47 +96,11 @@
                 <div class="text-center"> <img src="@("~/Images/" + Model.ImgName)" asp-append-version="true" width="200" height="300"> </div>
                 <div class="text-center mt-3">
                     <span class="bg-secondary p-1 px-4 rounded text-white">@Model.City.CityName</span>
-                    <h3>Phone number : @Model.User.Phone</h3>
-                    <h5 class="mt-2 mb-0">@Model.User.Name</h5> <span> Liscence Expire Date : @Model.ExpireDate.ToString("yyyy/MMMM/dd")</span>
-                    <div class="buttons mt-2 mb-0">
-                        @{int res = DateTime.Compare(Model.ExpireDate, DateTime.Now);
-                            if (res > 0)
-                            {
-                                <a asp-action="Approve" asp-controller="Admin" asp-route-id="@Model.GuId" asp-route-status="Approve" class="btn btn-primary px-4">Approve</a>
-                                <a asp-action="Approve" asp-controller="Admin" asp-route-id="@Model.GuId" asp-route-status="Deny" class="btn btn-outline-primary px-4 ms-3">Deny</a>
-                            }
-                            else
-                            {
-                                <span> Liscence is Expired</span>
-                                <a asp-action="Approve" asp-controller="Admin" asp-route-id="@Model.GuId" asp-route-status="Deny" class="btn btn-outline-primary px-4 ms-3">Deny</a>
-                            }
-                        }
-                    </div>
+
+                    <h5 class="mt-2 mb-0">@Model.User.Name</h5>
+                    <h6>Contact number : @Model.User.Phone</h6>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<script>
-                @{
-                if (@ViewData["Successful"] != null)
-                {
-                    <Text>
-                    var result = '@Html.Raw(ViewData["Successful"])';
-                    Swal.fire(result,'','success')
-                        .then(
-                            function () {
-                                window.location.href = '@Url.Action("ApproveCertificate", "Admin")';
-                            }
-                        );
-                    </Text>
-                    }
-                   else if(@ViewData["Falied"] != null )
-                    {
-                    <Text>
-                        var result = '@Html.Raw(ViewData["Falied"])';
-                        Swal.fire(result,'','error')
-                    </Text>
-                    }
-            }
-</script>

@@ -1,0 +1,52 @@
+﻿@model IEnumerable<tblGuiderCertificate>
+<script>
+                @{
+                if (@ViewData["Successful"] != null)
+                {
+                    <Text>
+                    var result = '@Html.Raw(ViewData["Successful"])';
+                    Swal.fire(result,'','success')
+                    </Text>
+                    }
+                   else if(@ViewData["Falied"] != null )
+                    {
+                    <Text>
+                        var result = '@Html.Raw(ViewData["Falied"])';
+                        Swal.fire(result,'','error')
+                    </Text>
+                    }
+            }
+</script>
+<div class="card-body">
+    <div id="v-card" class="row justify-content-center" style="margin-top: 44px;">
+        <div class="col-md-7 ">
+            <table id="datatablesSimple">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Place Name</th>
+                        <th>City</th>
+                        <th>Action</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ var i = 1;
+                        foreach (var item in Model)
+                        {
+
+                            <tr>
+                                <td>@i </td>
+                                <td>@item.User.Name</td>
+                                <td>@item.City.CityName</td>
+                                <td>
+                                    <a asp-controller="Places" asp-action="ViewGuiderInfo" asp-route-id="@item.GuId">View</a>
+                                </td>
+                            </tr>
+                            i++;
+                        } }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -80,6 +80,10 @@ namespace ITMS.Repository
         {
             return _context.tblGuiderCertificate.Include(S => S.Status).Include(U => U.User).Include(C => C.City).Where(SC => SC.StatusId == 1);
         }
+        public IEnumerable<tblGuiderCertificate> viewAllActiveGuiders()
+        {
+            return _context.tblGuiderCertificate.Include(S => S.Status).Include(U => U.User).Include(C => C.City).Where(SC => SC.StatusId == 2);
+        }
         public tblGuiderCertificate getApplicantInfo(Guid id)
         {
             return _context.tblGuiderCertificate.Include(S => S.Status).Include(U => U.User).Include(C => C.City).SingleOrDefault(SC => SC.GuId == id);
@@ -170,13 +174,20 @@ namespace ITMS.Repository
         }
         public int checkForGuider(int Id)
         {
+            try
+            {
                 tblGuiderCertificate RegisterStatus = _context.tblGuiderCertificate.SingleOrDefault(R => R.UserId == Id);
-                if (RegisterStatus.StatusId == 1)    
+                if (RegisterStatus.StatusId != 3)
                     return 1;
                 else
                     return 0;
+            }
+            catch
+            {
+                return 0;
+            }
         }
-        public tblGuiderCertificate GuiderInfo (int Id)
+        public tblGuiderCertificate GuiderInfo(int Id)
         {
             return _context.tblGuiderCertificate.Include(S => S.Status).Include(U => U.User).Include(C => C.City).SingleOrDefault(R => R.UserId == Id);
 

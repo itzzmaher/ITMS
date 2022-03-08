@@ -48,7 +48,14 @@ namespace ITMS.Controllers
             ViewData["Places"] = PlaceRepository.getPlaceByCategory(category);
             return View();
         }
-       
 
+        public IActionResult ViewGuiders()
+        {
+            return View(AccountRep.viewAllActiveGuiders());
+        }
+        public IActionResult ViewGuiderInfo (Guid id) { 
+
+            return View(AccountRep.getApplicantInfo(id));
+        }
     }
 }
