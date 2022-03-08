@@ -39,15 +39,10 @@ namespace ITMS.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult SignUp(tblUsers userinfo,string ConfirmedPassword)
+        public IActionResult SignUp(tblUsers userinfo)
         {
 
-            if (userinfo.Password != ConfirmedPassword)
-            {
-                ViewBag.Error = 1;
-            }
-            else
-            {
+
                 int result = AccountRepository.AddUser(userinfo);
                 if (result == 1)
                     ViewData["Successful"] = "User added Successfully.";
@@ -57,7 +52,6 @@ namespace ITMS.Controllers
                     ViewData["PhoneFound"] = "There is already a user with this phone.";
                 if (result == 0)
                     ViewData["Failed"] = "An Error Occurred while processing your request, please try again Later";
-            }
             return View();
         }
         #region Login/Logout
