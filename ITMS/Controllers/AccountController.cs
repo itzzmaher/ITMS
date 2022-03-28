@@ -39,10 +39,10 @@ namespace ITMS.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult SignUp(tblUsers userinfo)
+        public IActionResult SignUp(tblUsers userinfo , string psw)
         {
 
-
+            userinfo.Password = psw;
                 int result = AccountRepository.AddUser(userinfo);
                 if (result == 1)
                     ViewData["Successful"] = "User added Successfully.";

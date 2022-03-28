@@ -4,14 +4,16 @@ using ITMS.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ITMS.Migrations
 {
     [DbContext(typeof(SystemContext))]
-    partial class SystemContextModelSnapshot : ModelSnapshot
+    [Migration("20220329080239_addTour2")]
+    partial class addTour2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,21 +179,6 @@ namespace ITMS.Migrations
                     b.ToTable("tblRating");
                 });
 
-            modelBuilder.Entity("ITMS.Models.tblRegisterationStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("StatusName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("tblRegisterationStatus");
-                });
-
             modelBuilder.Entity("ITMS.Models.tblRoles", b =>
                 {
                     b.Property<int>("Id")
@@ -217,22 +204,10 @@ namespace ITMS.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<Guid>("GuId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("GuiderId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ImgName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("MaxTourist")
                         .HasColumnType("int");
 
                     b.Property<int>("PlacesId")
@@ -241,9 +216,6 @@ namespace ITMS.Migrations
                     b.Property<int>("Price")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("Id");
 
                     b.HasIndex("GuiderId");
@@ -251,42 +223,6 @@ namespace ITMS.Migrations
                     b.HasIndex("PlacesId");
 
                     b.ToTable("tblTour");
-                });
-
-            modelBuilder.Entity("ITMS.Models.tblTourRegisteration", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Details")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("GuId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("GuiderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RegStatusId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("TourDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GuiderId");
-
-                    b.HasIndex("RegStatusId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("tblTourRegisteration");
                 });
 
             modelBuilder.Entity("ITMS.Models.tblUsers", b =>
@@ -384,27 +320,6 @@ namespace ITMS.Migrations
                     b.HasOne("ITMS.Models.tblPlaces", "Places")
                         .WithMany()
                         .HasForeignKey("PlacesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ITMS.Models.tblTourRegisteration", b =>
-                {
-                    b.HasOne("ITMS.Models.tblGuiderCertificate", "Guider")
-                        .WithMany()
-                        .HasForeignKey("GuiderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ITMS.Models.tblRegisterationStatus", "RegStatus")
-                        .WithMany()
-                        .HasForeignKey("RegStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ITMS.Models.tblUsers", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

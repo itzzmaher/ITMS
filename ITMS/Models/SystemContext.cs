@@ -17,6 +17,9 @@ namespace ITMS.Models
         public DbSet<tblRating> tblRating { get; set; }
         public DbSet<tblGuiderCertificate> tblGuiderCertificate { get; set; }
         public DbSet<tblCertificate_status> tblCertificate_status { get; set; }
+        public DbSet<tblTour> tblTour { get; set; }
+        public DbSet<tblRegisterationStatus> tblRegisterationStatus { get; set; }
+        public DbSet<tblTourRegisteration> tblTourRegisteration { get; set; }
 
         public SystemContext(DbContextOptions<SystemContext> options)
             : base(options)

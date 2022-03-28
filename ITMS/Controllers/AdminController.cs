@@ -27,7 +27,7 @@ namespace ITMS.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult AddPlace(tblPlaces PlaceInfo, IFormFile ifile)
+        public IActionResult AddPlace(tblPlaces PlaceInfo, IFormFile ifile , IEnumerable<int>cate)
         {
             int result = PlaceRepository.AddPlaceAsync(PlaceInfo, ifile);
             if (result == 1)

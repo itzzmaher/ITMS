@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using ITMS.Models;
 using ITMS.Repository.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using ITMS.Repository;
+
+using System.Security.Cryptography;
 namespace ITMS.Repository
 {
     public class PlacesRepository : BaseContext
     {
-
+        AccountRepository AccountRep = new AccountRepository();
         public int AddPlaceAsync(tblPlaces PlaceInfo, IFormFile ifile)
         {
             try { 
@@ -133,6 +137,52 @@ namespace ITMS.Repository
                 return sum / i;
         }
 
+        public int Addtour (tblTour tourInfo, int userID)
+        {
+            try
+            {
+                tblGuiderCertificate guiderinfo = _context.tblGuiderCertificate.SingleOrDefault(G => G.UserId == userID);
+                tourInfo.GuId = Guid.NewGuid();
+                tourInfo.GuiderId = guiderinfo.Id;
+                tourInfo.IsDeleted = false;
+                _context.Add(tourInfo);
+                _context.SaveChanges();
+                return 1;
+            }
+            catch (Exception ss)
+            {
+                return 0;
+            }
+        }
+        public IEnumerable<tblTour> viewGuiderTours (Guid id)
+        {
+            tblGuiderCertificate GuiderInfo = AccountRep.getGuiderByGUID(id);
+            return _context.tblTour.Where(T => T.GuiderId == GuiderInfo.Id);
+        }
+        public tblTour getTourInfo (Guid id)
+        {
+            return _context.tblTour.Include(P => P.Places).Include(G => G.Guider).Include(U => U.Guider.User).SingleOrDefault(T => T.GuId == id);
+        }
+        public tblGuiderCertificate getGuiderInfoByTourGUID(Guid id)
+        {
+            tblTour tourInfo = getTourInfo(id);
+            return _context.tblGuiderCertificate.SingleOrDefault(G => G.Id == tourInfo.GuiderId);
+        }
+        public int RegisterTour (tblTourRegisteration RegInfo)
+        {
+            try
+            {
+                RegInfo.GuId = Guid.NewGuid();
+                RegInfo.RegStatusId = 1;
+                _context.Add(RegInfo);
+                _context.SaveChanges();
+                return 1;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
         
     }
 }

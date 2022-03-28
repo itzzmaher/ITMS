@@ -9,6 +9,8 @@ using ITMS.Models;
 using ITMS.Repository.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+
 
 namespace ITMS.Repository
 {
@@ -21,7 +23,7 @@ namespace ITMS.Repository
                 tblUsers userInfoByEmail = _context.tblUsers.AsNoTracking().SingleOrDefault(U => U.Email == UserInfo.Email);
                 if (userInfoByEmail != null)
                     return 2;  // user is already this email
-                tblUsers userInfoByNumber = _context.tblUsers.AsNoTracking().SingleOrDefault(U => U.Email == UserInfo.Phone);
+                tblUsers userInfoByNumber = _context.tblUsers.AsNoTracking().SingleOrDefault(U => U.Phone == UserInfo.Phone);
                 if (userInfoByNumber != null)
                     return 3;  // user is already this email
                 UserInfo.GuId = Guid.NewGuid();
@@ -38,21 +40,39 @@ namespace ITMS.Repository
             }
         }
         #region Encryption
-        public string Encrypt(string password)
+        //public string Encrypt(string password)
+        //{
+        //    string salt = "ITMS";
+        //    string GenPass = password + salt;
+        //    using (MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider())
+        //    {
+        //        UTF8Encoding utf8 = new UTF8Encoding();
+        //        byte[] data = md5.ComputeHash(utf8.GetBytes(GenPass));
+        //        return Convert.ToBase64String(data);
+
+        //    }
+        //}
+        public static string Encrypt(string password)
         {
             string salt = "ITMS";
             string GenPass = password + salt;
-            using (MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider())
+            MD5CryptoServiceProvider MD5Code = new MD5CryptoServiceProvider();
+            byte[] byteDizisi = Encoding.UTF8.GetBytes(GenPass);
+            byteDizisi = MD5Code.ComputeHash(byteDizisi);
+            StringBuilder sb = new StringBuilder();
+            foreach (byte ba in byteDizisi)
             {
-                UTF8Encoding utf8 = new UTF8Encoding();
-                byte[] data = md5.ComputeHash(utf8.GetBytes(GenPass));
-                return Convert.ToBase64String(data);
+                sb.Append(ba.ToString("x2").ToLower());
             }
+            return sb.ToString();
         }
         #endregion Encryption
         public tblUsers GetAccountsForLogin(tblUsers userinfo)
         {
-            return _context.tblUsers.Include(R => R.Role).SingleOrDefault(U => U.Email == userinfo.Email && U.Password == Encrypt(userinfo.Password));
+            userinfo.Password = Encrypt(userinfo.Password);
+            tblUsers userinf = _context.tblUsers.Include(R => R.Role).SingleOrDefault(U => U.Email == userinfo.Email && U.Password == userinfo.Password);
+            return userinf;
+
 
         }
         public async Task<int> addCertificateDataAsync(tblGuiderCertificate CerInfo, IFormFile ifile, int userID)
@@ -87,6 +107,10 @@ namespace ITMS.Repository
         public tblGuiderCertificate getApplicantInfo(Guid id)
         {
             return _context.tblGuiderCertificate.Include(S => S.Status).Include(U => U.User).Include(C => C.City).SingleOrDefault(SC => SC.GuId == id);
+        }
+        public tblGuiderCertificate getGuiderByGUID(Guid id)
+        {
+            return _context.tblGuiderCertificate.SingleOrDefault(SC => SC.GuId == id);
         }
 
         public int ApproveApplication(Guid id)

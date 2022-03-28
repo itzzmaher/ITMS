@@ -3,6 +3,11 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
 <link rel="icon" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
+    .divider {
+        border-left: 6px solid #e96b56;
+        height: 65px;
+    }
+
     body {
         background: #eee
     }
@@ -90,15 +95,65 @@
         }
 </style>
 <div class="container mt-5">
-    <div class="row d-flex justify-content-center">
-        <div class="col-md-7">
+    <div class="row d-flex ">
+        <div class="col-md-12 justify-content-center">
             <div class="card p-3 py-4">
                 <div class="text-center"> <img src="@("~/Images/" + Model.ImgName)" asp-append-version="true" width="200" height="300"> </div>
                 <div class="text-center mt-3">
                     <span class="bg-secondary p-1 px-4 rounded text-white">@Model.City.CityName</span>
 
-                    <h5 class="mt-2 mb-0">@Model.User.Name</h5>
-                    <h6>Contact number : @Model.User.Phone</h6>
+                    <h4 class="mt-2 mb-0">@Model.User.Name</h4>
+                    <h5>Contact number : @Model.User.Phone</h5>
+                </div>
+                <div>
+                    @{IEnumerable<tblTour> Tours = ViewData["GuiderTours"] as IEnumerable<tblTour>;
+                        <h3>All tours (@Tours.Count())</h3>
+                        foreach (var item in Tours)
+                        {
+
+                            <img src="@("~/Images/" + item.ImgName)" asp-append-version="true" width="250" height="250">
+
+                            <div class="row">
+                                <div class="col-2">
+                                    <div class="row">
+                                        <h6>Price</h6>
+                                    </div>
+                                    <div class="row">
+                                        <h6>@item.Price</h6>
+                                    </div>
+                                </div>
+
+                                <div class="col-2">
+                                    <div class="row">
+                                        <h6>Maximum number of touroists</h6>
+                                    </div>
+                                    <div class="row">
+                                        <h6>@item.MaxTourist</h6>
+                                    </div>
+                                </div>
+
+                                <div class="col-2">
+                                    <div class="row">
+                                        <h6>Start Date of tours</h6>
+                                    </div>
+                                    <div class="row">
+                                        <h6>@item.StartDate.ToString("yyyy/MMMM/dd")</h6>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="row">
+                                        <h6>End Date of tours</h6>
+                                    </div>
+                                    <div class="row">
+                                        <h6>@item.EndDate.ToString("yyyy/MMMM/dd")</h6>
+                                    </div>
+                                </div>
+                                <div class="col-1">
+                                    <a class="btn btn-outline-info" asp-action="TourInfo" asp-controller="Places" asp-route-id="@item.GuId">View Tour</a>
+                                </div>
+                            </div>
+                        }
+                    }
                 </div>
             </div>
         </div>

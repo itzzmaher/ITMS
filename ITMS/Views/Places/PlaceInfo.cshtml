@@ -1,67 +1,118 @@
 ﻿@model ITMS.Models.tblRating
-    <link href="~/lib/summernote-0.8.18-dist/summernote-lite.css" rel="stylesheet" />
-    <script src="~/lib/summernote-0.8.18-dist/summernote-lite.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-    <style>
-        .top-buffer {
-            margin-top: 35px;
+<link href="~/lib/summernote-0.8.18-dist/summernote-lite.css" rel="stylesheet" />
+<script src="~/lib/summernote-0.8.18-dist/summernote-lite.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<style>
+    .top-buffer {
+        margin-top: 35px;
+    }
+
+    .divider {
+        border-top: 8px solid #bbb;
+        border-radius: 5px;
+        color: orange;
+
+    }
+    .buttons a:nth-child(1) {
+        border: 1px solid #e96b56 !important;
+        color: #e96b56;
+        height: 40px;
+        background-color: #fff
+    }
+
+        .buttons a:nth-child(1):hover {
+            border: 1px solid #e96b56 !important;
+            color: #fff;
+            height: 40px;
+            background-color: #e96b56
         }
-        .divider {
-            border-top: 8px solid #bbb;
-            border-radius: 5px;
-            color: orange;
-        }
-    </style>
-    @{var data = (tblPlaces)ViewData["PlaceInfo"]; }
+</style>
+@{var data = (tblPlaces)ViewData["PlaceInfo"]; }
 <div class="container">
-    @if (data == null )
-            {  
-    <div class="text-center">
-        <img src="~/Images/404_image.png" />
-        <h4 style="color:midnightblue;">This page doesn't exist.</h4>
-        <h4 style="color:midnightblue;">Click <a href="/Places/ViewPlaces">HERE</a> to go back  </h4 >
-    </div>
-            }
-            else { 
-    <!-- Portfolio Item Heading -->
-    <h1 class="my-4">
-        <small>@data.Name</small>
-    </h1>
+    @if (data == null)
+    {
+        <div class="text-center">
+            <img src="~/Images/404_image.png" />
+            <h4 style="color:midnightblue;">This page doesn't exist.</h4>
+            <h4 style="color:midnightblue;">Click <a href="/Places/ViewPlaces">HERE</a> to go back  </h4>
+        </div>
+    }
+    else
+    {
 
-    <!-- Portfolio Item Row -->
-    <div class="row">
+        <h1 class="my-4">
+            <small>@data.Name</small>
+        </h1>
 
-        <div class="col-md-8">
-            <img class="img-fluid" src="@("~/Images/" + data.ImgName)" asp-append-version="true" width="750px" height="500px">
+        <div class="row">
+
+            <div class="col-md-8">
+                <img class="img-fluid" src="@("~/Images/" + data.ImgName)" asp-append-version="true" width="750px" height="500px">
+            </div>
+
+            <div class="col-md-4">
+                <h2 class="my-3">Place Description</h2>
+                <p>Date of Creation : <span style="color:dimgray">@data.CreationDate.ToString("yyyy/MMMM/dd")</span></p>
+                <p> <span style="color:dimgray">@data.Category.CategoryName</span></p>
+                <div id="map" style="width: 450px; height: 350px;" href="@data.location"> </div>
+                <p>Google Maps Link : <a id="location" href="@data.location">Here</a></p>
+                <hr class="divider" />
+
+                @if (User.IsInRole("Guider"))
+                {
+                    <a asp-action="AddTour" asp-controller="Guider" asp-route-id="@data.GuId">Add tour</a>
+                }
+
+                <div id="Distance"></div>
+                <p id="msg"></p>
+                
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="col-form-label">Fuel type</label>
+                            <select id="Ftype" class="form-control custom-select">
+                                <option value="91">91</option>
+                                <option value="95">95</option>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="col-form-label">Fuel Economy</label>
+                            <select id="Economy" class="form-control custom-select">
+                                <option value="17">Excellent 15 and above</option>
+                                <option value="13">Average 10-15</option>
+                                <option value="8">Poor bellow 10 </option>
+                            </select>
+
+                        </div>
+                    </div>
+                        <button class="btn btn-primary " onclick="initMap()">Click me</button>
+
+                <div id="msg2"></div>
+
+
+            </div>
+
         </div>
 
-        <div class="col-md-4">
-            <h2 class="my-3">Place Description</h2>
-            <p>Date of Creation : <span style="color:dimgray">@data.CreationDate.ToString("yyyy/MMMM/dd")</span></p>
-            <p> <span style="color:dimgray">@data.Category.CategoryName</span></p>
-            <p>Google Maps Location : <a id="location" href="@data.location">Here</a></p> 
-
-
-
+        <hr class="divider" />
+        <h2 class="my-3">Description</h2>
+        <div class="row">
+            <p>@Html.Raw(data.Description)</p>
         </div>
-
-    </div>
-    <hr class="divider" />
-    <h2 class="my-3">Description</h2>
-    <div class="row">
-        <p>@Html.Raw(data.Description)</p>
-    </div>
-    <hr class="divider" />
-    <div class="row top-buffer"></div>
+        <hr class="divider" />
+        <div class="row top-buffer"></div>
         IEnumerable<tblRating> Ratings = ViewData["Ratings"] as IEnumerable<tblRating>;
         if (Ratings.Count() > 0)
         {
 
 
-    <h4>Average Rating : @ViewData["AverageRating"]</h4>
-    <div class="row top-buffer"></div>
-    
-        <h4>Number of Ratings : @Ratings.Count()</h4>}
+            <h4>Average Rating : @ViewData["AverageRating"]</h4>
+            <div class="row top-buffer"></div>
+
+            <h4>Number of Ratings : @Ratings.Count()</h4>}
         <!-- /.container -->
         if (User.Identity.IsAuthenticated)
         {
@@ -107,38 +158,92 @@
 
     }
 </div>
-    <script type="text/javascript">
-        $('#summernote').summernote({
-            fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24'],
-            toolbar: [
-                // [groupName, [list of button]]
-                ['style', ['bold', 'italic', 'underline', 'clear']],
-                ['font', ['strikethrough', 'superscript', 'subscript']],
-                ['fontsize', ['fontsize']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['height', ['height']]
-            ]
-        });
-    </script>
-    <script>
+<script type="text/javascript">
+    $('#summernote').summernote({
+        fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24'],
+        toolbar: [
+            // [groupName, [list of button]]
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font', ['strikethrough', 'superscript', 'subscript']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['height', ['height']]
+        ]
+    });
+</script>
 
-        var x = document.getElementById("Distance");
-        
-        window.onload = function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
-            } else {
-                x.innerHTML = "Geolocation is not supported by this browser.";
+
+<script>
+    // Initialize and add the map
+    function initMap() {
+        var map;
+        // The map, centered on Central Park
+        function success(pos) {
+            var crd = pos.coords;
+
+            const center = { lat: crd.latitude, lng: crd.longitude };
+            const options = { zoom: 15, scaleControl: true, center: center };
+            map = new google.maps.Map(
+                document.getElementById('map'), options);
+            const dakota = { lat: crd.latitude, lng: crd.longitude };
+            const frick = { lat: @ViewData["lon"], lng: @ViewData["lat"] };
+            // The markers for The Dakota and The Frick Collection
+            var mk1 = new google.maps.Marker({ position: dakota, map: map });
+            var mk2 = new google.maps.Marker({ position: frick, map: map });
+            let directionsService = new google.maps.DirectionsService();
+            let directionsRenderer = new google.maps.DirectionsRenderer();
+            directionsRenderer.setMap(map); // Existing map object displays directions
+            // Create route from existing points used for markers
+            const route = {
+                origin: dakota,
+                destination: frick,
+                travelMode: 'DRIVING'
             }
-        }
-        function showPosition(position) {
-           /* x.innerHTML = position.coords.latitude;
-            x.setAttribute('value', position.coords.latitude);
-            = position.coords.latitude;*/
-            /*  y.setAttribute('value', position.coords.longitude);
-                          = position.coords.longitude;*/
 
+            directionsService.route(route,
+                function (response, status) { // anonymous function to capture directions
+                    if (status !== 'OK') {
+                        window.alert('Directions request failed due to ' + status);
+                        return;
+                    } else {
+                        directionsRenderer.setDirections(response); // Add route to the map
+                        var directionsData = response.routes[0].legs[0]; // Get data about the mapped route
+                        if (!directionsData) {
+                            window.alert('Directions request failed');
+                            return;
+                        }
+                        else {
+                            document.getElementById('Distance').innerHTML = " Driving distance is " + directionsData.distance.text + " (" + directionsData.duration.text + ").";
+                            var Ftype = parseInt(document.getElementById('Ftype').value, 10);
+                            var Economy = parseInt(document.getElementById('Economy').value, 10);
+                            var fuelcost, eco;
+                            if (Ftype == 91)
+                                fuelcost = 2.18;
+                            else
+                                fuelcost = 2.33;
+                            if (Economy == 17)
+                                eco = 100 / 5.88;
+                            if (Economy == 13) 
+                                eco = 100 / 8;
+                            if (Economy == 8)
+                                eco = 100 / 12.5;
+
+
+                            var cost = ((directionsData.distance.value / 1000) / eco) * fuelcost;
+                            document.getElementById('msg2').innerHTML = "Cost to drive " + cost.toFixed(2) + " SAR";
+
+                        }
+                    }
+                });
         }
-    </script>
+        function error(err) {
+            console.warn(`ERROR(${err.code}): ${err.message}`);
+        }
+        navigator.geolocation.getCurrentPosition(success, error);
+    }
+</script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8nGzbiKU7I2OYSfkFrrzOalu8wV8DE2o">
+</script>

@@ -1,0 +1,51 @@
+﻿@model ITMS.Models.tblTour
+<div class="container">
+    <h1 class="my-4">
+        <small>@Model.Places.Name Tour</small>
+    </h1>
+
+    <div class="row">
+
+        <div class="col-md-5">
+            <img class="img-fluid" src="@("~/Images/" + Model.ImgName)" asp-append-version="true" width="750px" height="500px">
+        </div>
+
+        <div class="col-md-7">
+            <h2>Tour Details</h2>
+            <div class="row">
+                <h5>Guider Name</h5>
+            </div>
+            <div class="row">
+                <h5>@Model.Guider.User.Name</h5>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <div class="row">
+                        <h5>Start Date of tours</h5>
+                    </div>
+                    <div class="row">
+                        <h5>@Model.StartDate.ToString("yyyy/MMMM/dd")</h5>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="row">
+                        <h5>End Date of tours</h5>
+                    </div>
+                    <div class="row">
+                        <h5>@Model.EndDate.ToString("yyyy/MMMM/dd")</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <h5>Description</h5>
+            </div>
+            <div class="row">
+                <p>@Html.Raw(Model.Description)</p>
+            </div>
+            <div class="row">
+               <a class="btn btn-primary" asp-action="RegisterTour" asp-controller="Places" asp-route-id="@Model.GuId">Register</a>
+            </div>
+        </div>
+    </div>
+</div>
