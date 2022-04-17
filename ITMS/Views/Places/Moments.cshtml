@@ -1,0 +1,25 @@
+﻿        @{IEnumerable<tblMoment> Moments = ViewData["AllMoments"] as IEnumerable<tblMoment>;
+          IEnumerable<tblFile> File = ViewData["AllFilesMoments"] as IEnumerable<tblFile>;
+
+
+}
+<div class="container">
+
+    @foreach (var item in Moments)
+    {
+    <div class="container">
+        <small>
+            @item.User.Name
+        </small>
+        <p> @Html.Raw(item.Details)</p>
+        @foreach (var fi in File)
+        {
+        if (item.Id == fi.MomentId)
+        {
+        <img class="img-fluid" src="@("~/Images/" + fi.FileName)" asp-append-version="true" width="750px" height="500px">
+        }
+        }
+    </div>
+        }
+   
+        </div>

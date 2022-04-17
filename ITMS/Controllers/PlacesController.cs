@@ -29,9 +29,11 @@ namespace ITMS.Controllers
         {
             ViewData["Ratings"] = PlaceRepository.getAllRatingForPlace(id);
             tblPlaces placeinfo = PlaceRepository.getPlaceInfo(id);
-
+            if (User.Identity.IsAuthenticated) { 
+            ViewData["CarInfo"] = PlaceRepository.getUserCar(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            ViewData["UserCheckVisit"] = PlaceRepository.checkVisit(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value),id);
+            }
             ViewData["PlaceInfo"] = placeinfo;
-
             ViewData["AverageRating"] = PlaceRepository.getAverageRating(id);
             try { 
             var lat = findlatitude(placeinfo.location);
@@ -66,24 +68,66 @@ namespace ITMS.Controllers
         {
             return View(AccountRep.viewAllActiveGuiders());
         }
+        public IActionResult AllTours()
+        {
+            return View(PlaceRepository.getAllTours());
+        }
+        public IActionResult Visit(Guid id)
+        {
+            int reuslt = PlaceRepository.addVisit(id, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+
+            return RedirectToAction(nameof(PlaceInfo), new { id = id });
+        }
+        
+        public IActionResult ShareMoment()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult ShareMoment(tblMoment MomentInfo, List<IFormFile> ifile)
+        {
+            MomentInfo.UserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            int result = PlaceRepository.addMoment(MomentInfo, ifile);
+            return View();
+        }
         public IActionResult ViewGuiderInfo (Guid id) {
 
             ViewData["GuiderTours"] = PlaceRepository.viewGuiderTours(id);
             return View(AccountRep.getApplicantInfo(id));
         }
+        public IActionResult Moments()
+        {
+            ViewData["AllMoments"] = PlaceRepository.GetAllMoments();
+            ViewData["AllFilesMoments"] = PlaceRepository.GetAllFilesMoments();
+            return View();
+        }
+        public IActionResult AddCar(string guid)
+        {
+            ViewData["FuelId"] = new SelectList(new PlacesRepository().getAllFuel(), "Id", "FuelName");
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AddCar(tblCar carInfo)
+        {
+            carInfo.UserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            int result = PlaceRepository.addCar(carInfo);
+            if (result == 1)
+                ViewData["Successful"] = "Car added successfully";
+            else
+                ViewData["Falied"] = "An Error Occurred while processing your request, please try again Later";
+            return View();
+        }
+        
         public IActionResult TourInfo(Guid id)
         {
-
-            
             return View(PlaceRepository.getTourInfo(id));
         }
         public IActionResult RegisterTour (Guid id)
         {
-            tblGuiderCertificate GuiderInfo = PlaceRepository.getGuiderInfoByTourGUID(id);
-            ViewData["GID"] = GuiderInfo.Id;
+
+            
             tblTour tourinfo = PlaceRepository.getTourInfo(id);
-            ViewData["Min"] = tourinfo.StartDate;
-            ViewData["Max"] = tourinfo.EndDate;
+            ViewData["TID"] = tourinfo.Id;
             return View();
         }
         [HttpPost]
@@ -91,9 +135,9 @@ namespace ITMS.Controllers
         {
             Registerationinfo.UserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             int result = PlaceRepository.RegisterTour(Registerationinfo);
-            
-            return View();
+            return RedirectToAction();
         }
+       
         public double findlongitude(string url)
         {
             double Latitude;

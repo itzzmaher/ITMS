@@ -4,45 +4,22 @@ using ITMS.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ITMS.Migrations
 {
     [DbContext(typeof(SystemContext))]
-    partial class SystemContextModelSnapshot : ModelSnapshot
+    [Migration("20220419032823_update-tour")]
+    partial class updatetour
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("ITMS.Models.tblCar", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("FuelEco")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FuelId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FuelId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("tblCar");
-                });
 
             modelBuilder.Entity("ITMS.Models.tblCategory", b =>
                 {
@@ -89,44 +66,6 @@ namespace ITMS.Migrations
                     b.ToTable("tblCity");
                 });
 
-            modelBuilder.Entity("ITMS.Models.tblFile", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("FileName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("MomentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MomentId");
-
-                    b.ToTable("tblFile");
-                });
-
-            modelBuilder.Entity("ITMS.Models.tblFuel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("FuelName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<float>("Price")
-                        .HasColumnType("real");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("tblFuel");
-                });
-
             modelBuilder.Entity("ITMS.Models.tblGuiderCertificate", b =>
                 {
                     b.Property<int>("Id")
@@ -161,32 +100,6 @@ namespace ITMS.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("tblGuiderCertificate");
-                });
-
-            modelBuilder.Entity("ITMS.Models.tblMoment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Details")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("GuId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("tblMoments");
                 });
 
             modelBuilder.Entity("ITMS.Models.tblPlaces", b =>
@@ -381,31 +294,6 @@ namespace ITMS.Migrations
                     b.ToTable("tblTourRegisteration");
                 });
 
-            modelBuilder.Entity("ITMS.Models.tblUserVisit", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("PlacesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("VisitDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PlacesId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("tblUserVisit");
-                });
-
             modelBuilder.Entity("ITMS.Models.tblUsers", b =>
                 {
                     b.Property<int>("Id")
@@ -441,30 +329,6 @@ namespace ITMS.Migrations
                     b.ToTable("tblUsers");
                 });
 
-            modelBuilder.Entity("ITMS.Models.tblCar", b =>
-                {
-                    b.HasOne("ITMS.Models.tblFuel", "Fuel")
-                        .WithMany()
-                        .HasForeignKey("FuelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ITMS.Models.tblUsers", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ITMS.Models.tblFile", b =>
-                {
-                    b.HasOne("ITMS.Models.tblMoment", "Moment")
-                        .WithMany()
-                        .HasForeignKey("MomentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ITMS.Models.tblGuiderCertificate", b =>
                 {
                     b.HasOne("ITMS.Models.tblCity", "City")
@@ -477,15 +341,6 @@ namespace ITMS.Migrations
                         .WithMany()
                         .HasForeignKey("StatusId");
 
-                    b.HasOne("ITMS.Models.tblUsers", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ITMS.Models.tblMoment", b =>
-                {
                     b.HasOne("ITMS.Models.tblUsers", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -549,21 +404,6 @@ namespace ITMS.Migrations
                     b.HasOne("ITMS.Models.tblTour", "Tour")
                         .WithMany()
                         .HasForeignKey("TourId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ITMS.Models.tblUsers", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ITMS.Models.tblUserVisit", b =>
-                {
-                    b.HasOne("ITMS.Models.tblPlaces", "Places")
-                        .WithMany()
-                        .HasForeignKey("PlacesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -100,6 +100,14 @@ namespace ITMS.Repository
         {
             return _context.tblGuiderCertificate.Include(S => S.Status).Include(U => U.User).Include(C => C.City).Where(SC => SC.StatusId == 1);
         }
+        public IEnumerable<tblGuiderCertificate> viewAllGuiders()
+        {
+            return _context.tblGuiderCertificate.Include(S => S.Status).Include(U => U.User).Include(C => C.City);
+        }
+        public IEnumerable<tblUsers> viewAllTourists()
+        {
+            return _context.tblUsers.Include(R => R.Role).Where(R => R.RoleId == 1);
+        }
         public IEnumerable<tblGuiderCertificate> viewAllActiveGuiders()
         {
             return _context.tblGuiderCertificate.Include(S => S.Status).Include(U => U.User).Include(C => C.City).Where(SC => SC.StatusId == 2);

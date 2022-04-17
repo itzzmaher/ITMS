@@ -16,9 +16,46 @@ namespace ITMS.Controllers
         PlacesRepository PlaceRepository = new PlacesRepository();
         AccountRepository AccountRep = new AccountRepository();
 
-        public IActionResult Index()
+        public IActionResult ModifyPlaces()
         {
             return View (PlaceRepository.getAllplaces());
+        }
+        public IActionResult GasPrice()
+        {
+            ViewData["95Price"] = PlaceRepository.get95Price();
+            ViewData["91Price"] = PlaceRepository.get91Price();
+            return View();
+        }
+        [HttpPost]
+        public IActionResult GasPrice(float Price95, float Price91)
+        {
+            int result = PlaceRepository.updateGasPrices(Price95, Price91);
+            if (result == 1)
+                ViewData["Successful"] = "Gas prices updated successfully";
+            else
+                ViewData["Falied"] = "An Error Occurred while processing your request, please try again Later";
+            return View();
+        }
+        public IActionResult AllTourists()
+        {
+            return View(AccountRep.viewAllTourists());
+        }
+        public IActionResult AllGuiders()
+        {
+            ViewData["TodayDate"] = DateTime.Now.ToString("yyyy/MMMM/dd");
+            return View(AccountRep.viewAllGuiders());
+        }
+        public IActionResult Dashboard()
+        {
+            ViewData["TodayName"] = DateTime.Now.DayOfWeek.ToString();
+            ViewData["TodayDate"] = DateTime.Now.ToString("dd/MM/yyy");
+            ViewData["AllGuiders"] = AccountRep.viewAllGuiders().Count();
+            ViewData["AllTourists"] = AccountRep.viewAllTourists().Count();
+            ViewData["WaitingGuiders"] = AccountRep.viewAllWaitingCertificate().Count();
+            ViewData["AllPlaces"] = PlaceRepository.getAllplaces().Count();
+            ViewData["95Price"] = PlaceRepository.get95Price();
+            ViewData["91Price"] = PlaceRepository.get91Price();
+            return View();
         }
         public IActionResult AddPlace()
         {
@@ -27,7 +64,7 @@ namespace ITMS.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult AddPlace(tblPlaces PlaceInfo, IFormFile ifile , IEnumerable<int>cate)
+        public IActionResult AddPlace(tblPlaces PlaceInfo, IFormFile ifile )
         {
             int result = PlaceRepository.AddPlaceAsync(PlaceInfo, ifile);
             if (result == 1)

@@ -1,0 +1,60 @@
+﻿@model ITMS.Models.tblCar;
+<script>
+                @{
+                if (@ViewData["Successful"] != null)
+                {
+                    <Text>
+                    var result = '@Html.Raw(ViewData["Successful"])';
+                    Swal.fire(result,'','success')
+                        .then(
+                            function () {
+                                window.location.href = '@Url.Action("Index", "Home")';
+                            }
+                        );
+                    </Text>
+                    }
+                   else if(@ViewData["Falied"] != null )
+                    {
+                    <Text>
+                        var result = '@Html.Raw(ViewData["Falied"])';
+                        Swal.fire(result,'','error')
+                        .then(
+                            function () {
+                                window.location.href = '@Url.Action("Index", "Home")';
+                            }
+                        );
+                    </Text>
+                    }
+            }
+</script>
+<div class="container">
+    <div id="v-card" class="d-flex justify-content-center" style="margin-top: 100px;">
+        <div class="card col-md-6">
+            <div class="card-header">
+                <h3>Car Info</h3>
+            </div>
+            <div class="card-body">
+                <form asp-action="AddCar" id="form">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="col-form-label">Car Economy</label>
+                            <input type="number" asp-for="FuelEco"class="form-control" step="0.1">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="col-form-label">Gas Type</label>
+                            <select class="form-control custom-select" asp-items="ViewBag.FuelId" asp-for="FuelId"></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 " style="text-align: left; margin-top: 30px;">
+                            <button type="submit" class="btn btn-dark btn-search" onclick=" return Valdation()"> Add </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

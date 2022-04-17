@@ -43,9 +43,18 @@
             <div class="row">
                 <p>@Html.Raw(Model.Description)</p>
             </div>
-            <div class="row">
-               <a class="btn btn-primary" asp-action="RegisterTour" asp-controller="Places" asp-route-id="@Model.GuId">Register</a>
-            </div>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="row">
+                    <a class="btn btn-primary" asp-action="RegisterTour" asp-controller="Places" asp-route-id="@Model.GuId">Register</a>
+                </div>
+            }
+            else
+            {
+                <h3>You need to log-in to register</h3>
+                <a class="btn btn-primary" asp-action="Login" asp-controller="Account">Login</a>
+            }
+
         </div>
     </div>
 </div>

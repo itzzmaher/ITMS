@@ -20,6 +20,11 @@ namespace ITMS.Models
         public DbSet<tblTour> tblTour { get; set; }
         public DbSet<tblRegisterationStatus> tblRegisterationStatus { get; set; }
         public DbSet<tblTourRegisteration> tblTourRegisteration { get; set; }
+        public DbSet<tblCar> tblCar { get; set; }
+        public DbSet<tblFuel> tblFuel { get; set; }
+        public DbSet<tblMoment> tblMoments { get; set; }
+        public DbSet<tblFile> tblFile { get; set; }
+        public DbSet<tblUserVisit> tblUserVisit { get; set; }
 
         public SystemContext(DbContextOptions<SystemContext> options)
             : base(options)

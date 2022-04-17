@@ -1,0 +1,45 @@
+﻿@model ITMS.Models.tblMoment
+<link href="~/lib/summernote-0.8.18-dist/summernote-lite.css" rel="stylesheet" />
+<script src="~/lib/summernote-0.8.18-dist/summernote-lite.js"></script>
+<div id="v-card" class="d-flex justify-content-center" style="margin-top: 100px;">
+    <div class="card col-md-6">
+        <div class="card-header">
+            <h3>Add Place</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="ShareMoment" id="form" name="form1" enctype="multipart/form-data">
+                <div class="row">
+                    <label class="col-form-label"> Description</label>
+                    <textarea id="summernote" asp-for="Details"></textarea>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="col-form-label">Picture</label>
+                        <input class="form-control" type="file" name="ifile" multiple />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 " style="text-align: left; margin-top: 30px;">
+                        <button type="submit" class="btn btn-dark btn-search"> Add </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#summernote').summernote({
+        fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24'],
+        toolbar: [
+            // [groupName, [list of button]]
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font', ['strikethrough', 'superscript', 'subscript']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['height', ['height']]
+        ]
+    });
+</script>

@@ -9,8 +9,8 @@ namespace ITMS.Models
     {
         public int Id { get; set; }
         public Guid GuId { get; set; }
-        public int GuiderId { get; set; }
-        public tblGuiderCertificate Guider { get; set; }
+        public int TourId { get; set; }
+        public tblTour Tour { get; set; }
         public int UserId { get; set; }
         public tblUsers User { get; set; }
         public int RegStatusId { get; set; }

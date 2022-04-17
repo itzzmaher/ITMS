@@ -1,19 +1,28 @@
 ﻿@model ITMS.Models.tblRating
+@using System.IO;
 <link href="~/lib/summernote-0.8.18-dist/summernote-lite.css" rel="stylesheet" />
 <script src="~/lib/summernote-0.8.18-dist/summernote-lite.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+
+
+
 <style>
     .top-buffer {
         margin-top: 35px;
+    }
+
+    .embed-responsive-item {
+        background-color: black;
     }
 
     .divider {
         border-top: 8px solid #bbb;
         border-radius: 5px;
         color: orange;
-
     }
+
     .buttons a:nth-child(1) {
         border: 1px solid #e96b56 !important;
         color: #e96b56;
@@ -27,8 +36,33 @@
             height: 40px;
             background-color: #e96b56
         }
+
+
+    input[type="radio"] {
+        display: none;
+    }
+
+    label {
+        color: grey;
+    }
+
+    .clasificacion {
+        direction: rtl;
+        unicode-bidi: bidi-override;
+    }
+
+    label:hover,
+    label:hover ~ label {
+        color: orange;
+    }
+
+    input[type="radio"]:checked ~ label {
+        color: orange;
+    }
+
 </style>
 @{var data = (tblPlaces)ViewData["PlaceInfo"]; }
+@{var CarData = (tblCar)ViewData["CarInfo"]; }
 <div class="container">
     @if (data == null)
     {
@@ -48,17 +82,34 @@
         <div class="row">
 
             <div class="col-md-8">
+                @{ var ext = System.IO.Path.GetExtension(data.ImgName);}
+                @if (ext == ".mp4")
+                {
+                <div align="center" class="embed-responsive embed-responsive-16by9">
+                    <video autoplay loop class="embed-responsive-item" controls>
+                        <source src="@Url.Content("~/Images/" + data.ImgName)" type="video/mp4">
+                    </video>
+                </div>
+                    @*<div class="video-frame">
+                        <video style="width:250px; height:150px;" controls>
+                            <source src="@Url.Content("~/Images/" + data.ImgName)" type="video/mp4" />
+                        </video>
+                    </div>*@
+                }
+                else { 
                 <img class="img-fluid" src="@("~/Images/" + data.ImgName)" asp-append-version="true" width="750px" height="500px">
+                }
             </div>
 
             <div class="col-md-4">
                 <h2 class="my-3">Place Description</h2>
                 <p>Date of Creation : <span style="color:dimgray">@data.CreationDate.ToString("yyyy/MMMM/dd")</span></p>
                 <p> <span style="color:dimgray">@data.Category.CategoryName</span></p>
-                <div id="map" style="width: 450px; height: 350px;" href="@data.location"> </div>
+                <div id="map" @*style="width: 450px; height: 350px;"*@ href="@data.location"> </div>
                 <p>Google Maps Link : <a id="location" href="@data.location">Here</a></p>
                 <hr class="divider" />
-
+                @if (@ViewData["UserCheckVisit"] == "0") { 
+                <a asp-action="Visit" asp-controller="Places" asp-route-id="@data.GuId">Visit</a>}
                 @if (User.IsInRole("Guider"))
                 {
                     <a asp-action="AddTour" asp-controller="Guider" asp-route-id="@data.GuId">Add tour</a>
@@ -66,33 +117,38 @@
 
                 <div id="Distance"></div>
                 <p id="msg"></p>
-                
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="col-form-label">Fuel type</label>
-                            <select id="Ftype" class="form-control custom-select">
-                                <option value="91">91</option>
-                                <option value="95">95</option>
-                            </select>
 
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="col-form-label">Fuel Economy</label>
-                            <select id="Economy" class="form-control custom-select">
-                                <option value="17">Excellent 15 and above</option>
-                                <option value="13">Average 10-15</option>
-                                <option value="8">Poor bellow 10 </option>
-                            </select>
+                @*<div class="row">
+            <div class="col-md-6">
+                <label class="col-form-label">Fuel type</label>
+                <select id="Ftype" class="form-control custom-select">
+                    <option value="91">91</option>
+                    <option value="95">95</option>
+                </select>
 
-                        </div>
-                    </div>
-                        <button class="btn btn-primary " onclick="initMap()">Click me</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="col-form-label">Fuel Economy</label>
+                <select id="Economy" class="form-control custom-select">
+                    <option value="17">Excellent 15 and above</option>
+                    <option value="13">Average 10-15</option>
+                    <option value="8">Poor bellow 10 </option>
+                </select>
 
-                <div id="msg2"></div>
-
-
+            </div>
+        </div>*@
+                @if (CarData == null && User.Identity.IsAuthenticated)
+                {
+                    <small>To calcaulte the distance to reach @data.Name you need to enter your car info</small>
+                    <a class="btn btn-outline-primary" asp-action="AddCar">Add</a>
+                }
+                else
+                {
+                    <a class="btn btn-primary " id="mapFunction" onclick="initMap()">Calculate Price</a>
+                    <div id="msg2"></div>
+                }
             </div>
 
         </div>
@@ -113,30 +169,40 @@
             <div class="row top-buffer"></div>
 
             <h4>Number of Ratings : @Ratings.Count()</h4>}
-        <!-- /.container -->
+
         if (User.Identity.IsAuthenticated)
         {
-            <form asp-action="AddRating" id="form">
+<form asp-action="AddRating" id="form">
+    <p class="container">
+        <input id="radio1" type="radio" value=5 asp-for="Rate">
 
-                <input type="radio" value=5 asp-for="Rate">
-                <label>☆☆☆☆☆</label><br />
-                <input type="radio" value=4 asp-for="Rate">
-                <label>☆☆☆☆</label><br />
-                <input type="radio" value=3 asp-for="Rate">
-                <label>☆☆☆</label><br />
-                <input type="radio" value=2 asp-for="Rate">
-                <label>☆☆</label><br />
-                <input type="radio" value=1 asp-for="Rate">
-                <label>☆</label><br />
-                <div class="row top-buffer">
-                    <div class="col-8">
-                        <textarea id="summernote" asp-for="Details"></textarea><br />
-                    </div>
-                </div>
-                <input type="text" value="@data.Id" asp-for="PlacesId" hidden />
-                <button type="submit" id="do_it" class="btn btn-outline-info" onclick="return Valdation()">Submit</button>
+        <label for="radio1">&#9733;</label>
 
-            </form>
+        <input id="radio2" type="radio" value=4 asp-for="Rate">
+
+        <label for="radio2">&#9733;</label>
+      
+        <input id="radio3" type="radio"value=3 asp-for="Rate">
+        
+        <label for="radio3">&#9733;</label>
+       
+        <input id="radio4" type="radio"value=2 asp-for="Rate">
+       
+        <label for="radio4">&#9733;</label>
+       
+        <input id="radio5" type="radio" value=1 asp-for="Rate">
+       
+        <label for="radio5">&#9733;</label>
+        </p>
+        <div class="row top-buffer">
+            <div class="col-8">
+                <textarea id="summernote" asp-for="Details"></textarea><br />
+            </div>
+        </div>
+        <input type="text" value="@data.Id" asp-for="PlacesId" hidden />
+        <button type="submit" id="do_it" class="btn btn-outline-info" onclick="return Valdation()">Submit</button>
+
+</form>
         }
 
 
@@ -174,15 +240,19 @@
     });
 </script>
 
+@if (CarData != null)
+{
+    <script>
 
-<script>
     // Initialize and add the map
     function initMap() {
         var map;
         // The map, centered on Central Park
         function success(pos) {
             var crd = pos.coords;
-
+            var msg = document.getElementById("map");
+            msg.style.width = "450px";
+            msg.style.height = "350px";
             const center = { lat: crd.latitude, lng: crd.longitude };
             const options = { zoom: 15, scaleControl: true, center: center };
             map = new google.maps.Map(
@@ -192,18 +262,18 @@
             // The markers for The Dakota and The Frick Collection
             var mk1 = new google.maps.Marker({ position: dakota, map: map });
             var mk2 = new google.maps.Marker({ position: frick, map: map });
-            let directionsService = new google.maps.DirectionsService();
-            let directionsRenderer = new google.maps.DirectionsRenderer();
-            directionsRenderer.setMap(map); // Existing map object displays directions
-            // Create route from existing points used for markers
-            const route = {
+                    let directionsService = new google.maps.DirectionsService();
+                    let directionsRenderer = new google.maps.DirectionsRenderer();
+                    directionsRenderer.setMap(map); // Existing map object displays directions
+                                                    // Create route from existing points used for markers
+                    const route = {
                 origin: dakota,
                 destination: frick,
                 travelMode: 'DRIVING'
-            }
+               }
 
-            directionsService.route(route,
-                function (response, status) { // anonymous function to capture directions
+                directionsService.route(route,
+                    function (response, status) { // anonymous function to capture directions
                     if (status !== 'OK') {
                         window.alert('Directions request failed due to ' + status);
                         return;
@@ -216,34 +286,22 @@
                         }
                         else {
                             document.getElementById('Distance').innerHTML = " Driving distance is " + directionsData.distance.text + " (" + directionsData.duration.text + ").";
-                            var Ftype = parseInt(document.getElementById('Ftype').value, 10);
-                            var Economy = parseInt(document.getElementById('Economy').value, 10);
-                            var fuelcost, eco;
-                            if (Ftype == 91)
-                                fuelcost = 2.18;
-                            else
-                                fuelcost = 2.33;
-                            if (Economy == 17)
-                                eco = 100 / 5.88;
-                            if (Economy == 13) 
-                                eco = 100 / 8;
-                            if (Economy == 8)
-                                eco = 100 / 12.5;
+                            var cost = ((directionsData.distance.value / 1000) / @CarData.FuelEco) * @CarData.Fuel.Price;
 
-
-                            var cost = ((directionsData.distance.value / 1000) / eco) * fuelcost;
                             document.getElementById('msg2').innerHTML = "Cost to drive " + cost.toFixed(2) + " SAR";
-
                         }
                     }
                 });
+
+
         }
         function error(err) {
             console.warn(`ERROR(${err.code}): ${err.message}`);
         }
         navigator.geolocation.getCurrentPosition(success, error);
-    }
-</script>
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8nGzbiKU7I2OYSfkFrrzOalu8wV8DE2o">
+    }
+    </script>
+}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8nGzbiKU7I2OYSfkFrrzOalu8wV8DE2o">
 </script>

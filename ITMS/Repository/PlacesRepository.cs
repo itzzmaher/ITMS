@@ -37,7 +37,27 @@ namespace ITMS.Repository
             }
 
         }
-
+        public int addCar(tblCar carInfo)
+        {
+            try
+            {
+                _context.Update(carInfo);
+                _context.SaveChanges();
+                return 1;
+            }
+            catch (Exception s)
+            {
+                return 0;
+            }
+        }
+            public IEnumerable<tblFuel> getAllFuel()
+        {
+            return _context.tblFuel;
+        }
+        public IEnumerable<tblTour> getAllTours()
+        {
+            return _context.tblTour.Where(A=> A.IsDeleted == false);
+        }
         public int EditPlace(tblPlaces PlaceInfo, IFormFile ifile)
         {
             try
@@ -102,9 +122,20 @@ namespace ITMS.Repository
         {
             return _context.tblCity;
         }
+
         public IEnumerable<tblCategory> getAllCategories()
         {
             return _context.tblCategory;
+        }
+        public float get95Price()
+        {
+            tblFuel fuelInfo = _context.tblFuel.SingleOrDefault(F => F.FuelName == "95");
+            return fuelInfo.Price;
+        }
+        public float get91Price()
+        {
+            tblFuel fuelInfo = _context.tblFuel.SingleOrDefault(F => F.FuelName == "91");
+            return fuelInfo.Price;
         }
         public IEnumerable<tblPlaces> getPlaceByCategory(string category)
         {
@@ -154,10 +185,16 @@ namespace ITMS.Repository
                 return 0;
             }
         }
+        public IEnumerable<tblTour> ViewPersonalTours(int id)
+        {
+            tblGuiderCertificate GuiderInfo = _context.tblGuiderCertificate.SingleOrDefault(G => G.UserId == id);
+            return _context.tblTour.Include(P => P.Places).AsNoTracking().Include(G => G.Guider).Where(S => S.GuiderId == GuiderInfo.Id && S.IsDeleted == false);
+
+        }
         public IEnumerable<tblTour> viewGuiderTours (Guid id)
         {
             tblGuiderCertificate GuiderInfo = AccountRep.getGuiderByGUID(id);
-            return _context.tblTour.Where(T => T.GuiderId == GuiderInfo.Id);
+            return _context.tblTour.Where(T => T.GuiderId == GuiderInfo.Id && T.IsDeleted == false);
         }
         public tblTour getTourInfo (Guid id)
         {
@@ -183,6 +220,155 @@ namespace ITMS.Repository
                 return 0;
             }
         }
-        
+        public int DeleteTour (Guid id)
+        {
+            tblTour tourInfo = _context.tblTour.SingleOrDefault(T => T.GuId == id);
+            tourInfo.IsDeleted = true;
+            _context.Update(tourInfo);
+            _context.SaveChanges();
+            return 1;
+        }
+        public tblCar getUserCar(int id)
+        {
+            tblCar carinfo = _context.tblCar.Include(F => F.Fuel).AsNoTracking().FirstOrDefault(U => U.UserId == id);
+
+            if (carinfo == null)
+                return null;
+            else
+                return carinfo;
+        }
+        public IEnumerable<tblTourRegisteration> ViewRegisterOrders(int id)
+        {
+            tblGuiderCertificate GuiderInfo = _context.tblGuiderCertificate.SingleOrDefault(G => G.UserId == id);
+            return _context.tblTourRegisteration.AsNoTracking().Include(G => G.Tour.Places).Include(U => U.User).Where(S => S.Tour.GuiderId == GuiderInfo.Id && S.RegStatusId == 1 || S.RegStatusId == 2);
+        }
+        public void CancelOrder (Guid id)
+        {
+            tblTourRegisteration regInfo = getTourRegByGUID(id);
+            regInfo.RegStatusId = 3;
+            _context.Update(regInfo);
+            _context.SaveChanges();
+        }
+        public void CompleteOrder(Guid id)
+        {
+            tblTourRegisteration regInfo = getTourRegByGUID(id);
+            regInfo.RegStatusId = 5;
+            _context.Update(regInfo);
+            _context.SaveChanges();
+        }
+        public void ApproveOrder(Guid id)
+        {
+            tblTourRegisteration regInfo = getTourRegByGUID(id);
+            regInfo.RegStatusId = 2;
+            _context.Update(regInfo);
+            _context.SaveChanges();
+        }
+        public void DenyOrder(Guid id)
+        {
+            tblTourRegisteration regInfo = getTourRegByGUID(id);
+            regInfo.RegStatusId = 3;
+            _context.Update(regInfo);
+            _context.SaveChanges();
+        }
+        public tblTourRegisteration getTourRegByGUID(Guid id)
+        {
+            return _context.tblTourRegisteration.SingleOrDefault(R => R.GuId == id);
+        }
+        public int updateGasPrices (float Price95, float Price91)
+        {
+            try
+            {
+                tblFuel fuelInfo = _context.tblFuel.SingleOrDefault(F => F.FuelName == "95");
+                fuelInfo.Price = Price95;
+                _context.Update(fuelInfo);
+                _context.SaveChanges();
+                fuelInfo = _context.tblFuel.SingleOrDefault(F => F.FuelName == "91");
+                fuelInfo.Price = Price91;
+                _context.Update(fuelInfo);
+                _context.SaveChanges();
+                return 1;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+        public tblMoment getMomentByGUID(Guid id)
+        {
+            return _context.tblMoments.SingleOrDefault(M => M.GuId == id);
+        }
+        public int addMoment(tblMoment MomentInfo, List<IFormFile> ifile)
+        {
+            try
+            {
+                MomentInfo.GuId = Guid.NewGuid();
+                MomentInfo.IsDeleted = false;
+                _context.Add(MomentInfo);
+                _context.SaveChanges();
+                tblMoment mInfo = getMomentByGUID(MomentInfo.GuId);
+                var id = mInfo.Id;
+
+                foreach (var item in ifile)
+                {
+                    tblFile FileInfo = new tblFile();
+                    var saveimg = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Images", item.FileName);
+                    var stream = new FileStream(saveimg, FileMode.Create);
+                    item.CopyToAsync(stream);
+                    FileInfo.FileName = item.FileName;
+                    FileInfo.MomentId = id;
+                    _context.AddAsync(FileInfo);
+                    
+                }
+                _context.SaveChangesAsync();
+                return 1;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+        public IEnumerable<tblMoment> GetAllMoments()
+        {
+            return _context.tblMoments.Include(U => U.User).Where(A => A.IsDeleted == false);
+        }
+        public IEnumerable<tblFile> GetAllFilesMoments()
+        {
+            return _context.tblFile.Include(M => M.Moment).Where(A => A.Moment.IsDeleted == false);
+        }
+        public int addVisit(Guid id,int userID)
+        {
+            try
+            {
+                tblPlaces placeinfo = getPlaceInfo(id);
+                tblUserVisit VisitInfo = new tblUserVisit();
+                VisitInfo.PlacesId = placeinfo.Id;
+                VisitInfo.VisitDate = DateTime.Now;
+                VisitInfo.UserId = userID;
+                _context.Add(VisitInfo);
+                _context.SaveChanges();
+                return 1;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+        public int checkVisit (int userID , Guid id)
+        {
+            var check = 0;
+            tblPlaces placeInfo = getPlaceInfo(id);
+            List< tblUserVisit> userVisits = _context.tblUserVisit.Where(U => U.UserId == userID && U.PlacesId == placeInfo.Id).ToList();
+            if (userVisits == null)
+                return 0;
+            foreach(var item in userVisits)
+            {
+                //DateTime newdate = item.VisitDate.AddDays(1);
+                if (item.VisitDate.AddDays(1) > DateTime.Now)
+                    check =  1;
+            }
+            return check;
+
+
+        }
     }
 }

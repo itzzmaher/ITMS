@@ -8,6 +8,7 @@ namespace ITMS.Models
     public class tblTour
     {
         public int Id { get; set; }
+        public string TourName { get; set; }
         public Guid GuId { get; set; }
         public int PlacesId { get; set; }
         public tblPlaces Places { get; set; }

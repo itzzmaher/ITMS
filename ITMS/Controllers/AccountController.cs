@@ -94,8 +94,7 @@ namespace ITMS.Controllers
                     new Claim(ClaimTypes.NameIdentifier, Account.Id.ToString()),
                     new Claim(ClaimTypes.Name, Account.GuId.ToString()),
                     new Claim(ClaimTypes.GivenName, Account.Name)
-
-                    }, CookieAuthenticationDefaults.AuthenticationScheme);
+                }, CookieAuthenticationDefaults.AuthenticationScheme);
 
                     var principal = new ClaimsPrincipal(identity);
 
