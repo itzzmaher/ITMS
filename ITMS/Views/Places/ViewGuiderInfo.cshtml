@@ -103,6 +103,15 @@
                     <span class="bg-secondary p-1 px-4 rounded text-white">@Model.City.CityName</span>
 
                     <h4 class="mt-2 mb-0">@Model.User.Name</h4>
+                    @{ IEnumerable<tblLangGuider> Languages = ViewData["CertificateLanguage"] as IEnumerable<tblLangGuider>;
+                        <h5 class="marg">Spoken Languages: </h5>
+                        foreach (var item in Languages)
+                        {
+
+                            <span class="btn btn-dark p-1 px-4 rounded text-white">@item.Language.EngName</span>
+
+                        }
+                    }
                     <h5>Contact number : @Model.User.Phone</h5>
                 </div>
                 <div>

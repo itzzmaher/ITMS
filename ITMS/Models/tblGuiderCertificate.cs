@@ -8,6 +8,7 @@ namespace ITMS.Models
     public class tblGuiderCertificate
     {
         public int Id { get; set; }
+        public int? CertificateId { get; set; }
         public Guid GuId { get; set; }
         public int CityId { get; set; }
         public tblCity City { get; set; }

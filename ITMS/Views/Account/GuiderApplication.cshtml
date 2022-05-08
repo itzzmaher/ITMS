@@ -16,13 +16,19 @@
             </div>
             </div>
             }
-            else
+            else if(check == 0)
             {
             <div class="card-header">
                 <h3>Guider Application</h3>
             </div>
             <div class="card-body">
                 <form asp-action="GuiderApplication" id="form" name="form1" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="col-form-label"> Certificate ID</label>
+                            <input class="form-control" type="number" asp-for="CertificateId" />
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-6">
                             <label class="col-form-label"> End Date of Lisence</label>
@@ -33,6 +39,12 @@
                         <div class="col-md-6">
                             <label class="col-form-label">City</label>
                             <select class="form-control" asp-items="ViewBag.CityId" asp-for="CityId"></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="col-form-label">Languages</label>
+                            <select class="form-control" asp-items="ViewBag.LanguageId"  name="lang" multiple></select>
                         </div>
                     </div>
                     <div class="row">

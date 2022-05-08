@@ -11,5 +11,6 @@ namespace ITMS.Models
         public string FileName { get; set; }
         public int MomentId { get; set; }
         public tblMoment Moment { get; set; }
+        public string? Type { get; set; }
     }
 }

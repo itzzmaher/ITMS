@@ -114,6 +114,7 @@ namespace ITMS.Controllers
         public IActionResult ApplicantInfo(Guid id)
         {
             ViewData["CurrentDate"] = DateTime.Now.ToString("yyyy/MMMM/dd");
+            ViewData["CertificateLanguage"] = AccountRep.guiderLanguagesByGUID(id);
             return View(AccountRep.getApplicantInfo(id));
         }
         public IActionResult Approve (Guid id)

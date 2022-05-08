@@ -96,9 +96,19 @@
             <div class="card p-3 py-4">
                 <div class="text-center"> <img src="@("~/Images/" + Model.ImgName)" asp-append-version="true" width="200" height="300"> </div>
                 <div class="text-center mt-3">
+                    <h5 class="mt-2 mb-0">@Model.User.Name</h5>
                     <span class="bg-secondary p-1 px-4 rounded text-white">@Model.City.CityName</span>
+                    @{ IEnumerable<tblLangGuider> Languages = ViewData["CertificateLanguage"] as IEnumerable<tblLangGuider>;
+                        <h5 class="marg">Spoken Languages: </h5>
+                        foreach (var item in Languages)
+                        {
+
+                            <span class="btn btn-dark p-1 px-4 rounded text-white">@item.Language.EngName</span>
+
+                        }
+                    }
                     <h3>Phone number : @Model.User.Phone</h3>
-                    <h5 class="mt-2 mb-0">@Model.User.Name</h5> <span> Liscence Expire Date : @Model.ExpireDate.ToString("yyyy/MMMM/dd")</span>
+                    <span> Liscence Expire Date : @Model.ExpireDate.ToString("yyyy/MMMM/dd")</span>
                     <div class="buttons mt-2 mb-0">
                         @{int res = DateTime.Compare(Model.ExpireDate, DateTime.Now);
                             if (res > 0)

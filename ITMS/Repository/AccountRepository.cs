@@ -40,18 +40,6 @@ namespace ITMS.Repository
             }
         }
         #region Encryption
-        //public string Encrypt(string password)
-        //{
-        //    string salt = "ITMS";
-        //    string GenPass = password + salt;
-        //    using (MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider())
-        //    {
-        //        UTF8Encoding utf8 = new UTF8Encoding();
-        //        byte[] data = md5.ComputeHash(utf8.GetBytes(GenPass));
-        //        return Convert.ToBase64String(data);
-
-        //    }
-        //}
         public static string Encrypt(string password)
         {
             string salt = "ITMS";
@@ -75,7 +63,7 @@ namespace ITMS.Repository
 
 
         }
-        public async Task<int> addCertificateDataAsync(tblGuiderCertificate CerInfo, IFormFile ifile, int userID)
+        public async Task<int> addCertificateDataAsync(tblGuiderCertificate CerInfo, IFormFile ifile, int userID, List<int> lang)
         {
             try
             {
@@ -85,17 +73,30 @@ namespace ITMS.Repository
                 var stream = new FileStream(saveimg, FileMode.Create);
                 await ifile.CopyToAsync(stream);
                 CerInfo.ImgName = ifile.FileName;
-
+                CerInfo.StatusId = 1;
                 _context.Add(CerInfo);
+                _context.SaveChanges();
+                tblGuiderCertificate guiderInfo = getGuiderByID(userID);
+                for (int i = 0; i<lang.Count; i++)
+                {
+                    tblLangGuider langInfo = new tblLangGuider();
+                    langInfo.GuiderId = guiderInfo.Id;
+                    langInfo.LanguageId = lang[i];
+                    _context.Add(langInfo);
+
+                }
                 _context.SaveChanges();
                 return 1;
             }
-            catch (Exception ex)
+            catch (Exception ss)
             {
                 return 0;
             }
         }
-
+        public tblGuiderCertificate getGuiderByID(int id)
+        {
+           return _context.tblGuiderCertificate.SingleOrDefault(A => A.UserId == id);
+        }
         public IEnumerable<tblGuiderCertificate> viewAllWaitingCertificate()
         {
             return _context.tblGuiderCertificate.Include(S => S.Status).Include(U => U.User).Include(C => C.City).Where(SC => SC.StatusId == 1);
@@ -135,7 +136,7 @@ namespace ITMS.Repository
                 _context.SaveChanges();
                 return 1;
             }
-            catch (Exception ss)
+            catch 
             {
                 return 0;
             }
@@ -151,7 +152,7 @@ namespace ITMS.Repository
                 _context.SaveChanges();
                 return 1;
             }
-            catch (Exception ss)
+            catch 
             {
                 return 0;
             }
@@ -204,24 +205,81 @@ namespace ITMS.Repository
                 return 0;
             }
         }
+        public tblUsers GetUserInfoByEmail(string Email)
+        {
+            return _context.tblUsers.AsNoTracking().SingleOrDefault(U => U.Email == Email);
+        }
+        public tblUsers checkemailuserforRecoverPassword(string KfuEmail)
+        {
+            // check the activate
+            tblUsers studentInfo = GetUserInfoByEmail(KfuEmail);
+            if (studentInfo != null)
+            {
+                return studentInfo;
+            }
+
+            return null;
+        }
         public int checkForGuider(int Id)
         {
             try
             {
-                tblGuiderCertificate RegisterStatus = _context.tblGuiderCertificate.SingleOrDefault(R => R.UserId == Id);
-                if (RegisterStatus.StatusId != 3)
-                    return 1;
-                else
-                    return 0;
+                    tblGuiderCertificate RegisterStatus = _context.tblGuiderCertificate.Include(S => S.Status).SingleOrDefault(R => R.UserId == Id);
+                    return RegisterStatus.Status.Id;
             }
             catch
             {
                 return 0;
             }
         }
+        public string statusName(int Id)
+        {
+
+                tblGuiderCertificate RegisterStatus = _context.tblGuiderCertificate.Include(S => S.Status).SingleOrDefault(R => R.UserId == Id);
+                return RegisterStatus.Status.StatusName;
+          
+        }
         public tblGuiderCertificate GuiderInfo(int Id)
         {
             return _context.tblGuiderCertificate.Include(S => S.Status).Include(U => U.User).Include(C => C.City).SingleOrDefault(R => R.UserId == Id);
+
+
+        }
+        public int ForgatPassword(tblUsers userinfo)
+        {
+            try
+            {
+                tblUsers userInfoByEmail = _context.tblUsers.AsNoTracking().SingleOrDefault(U => U.GuId == userinfo.GuId);
+                userInfoByEmail.Password = userinfo.Password;
+                _context.Update(userInfoByEmail);
+                _context.SaveChanges();
+                return 1; // Update Successfuly
+            }
+            catch
+            {
+                return 0; // Update Failed
+            }
+        }
+
+        public IEnumerable<tblLangGuider> guiderLanguages(int id)
+        {
+            tblGuiderCertificate guiderInfo = getGuiderByID(id);
+            return _context.tblLangGuider.Include(L => L.Language).Where(A => A.GuiderId == guiderInfo.Id);
+        }
+        public IEnumerable<tblLangGuider> guiderLanguagesByGUID(Guid id)
+        {
+            tblGuiderCertificate guiderInfo = getGuiderByGUID(id);
+            return _context.tblLangGuider.Include(L => L.Language).Where(A => A.GuiderId == guiderInfo.Id);
+        }
+        public void addcar(string Name, int FuelEco, int FuelId,int userID)
+        {
+            tblCar carInfo = new tblCar();
+            carInfo.Name = Name;
+            carInfo.FuelEco = FuelEco;
+            carInfo.FuelId = FuelId;
+            carInfo.UserId = userID;
+            _context.Add(carInfo);
+            _context.SaveChanges();
 
 
         }

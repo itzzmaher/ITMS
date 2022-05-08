@@ -25,7 +25,8 @@ namespace ITMS.Models
         public DbSet<tblMoment> tblMoments { get; set; }
         public DbSet<tblFile> tblFile { get; set; }
         public DbSet<tblUserVisit> tblUserVisit { get; set; }
-
+        public DbSet<tblLanguage> tblLanguage { get; set; }
+        public DbSet<tblLangGuider> tblLangGuider { get; set; }
         public SystemContext(DbContextOptions<SystemContext> options)
             : base(options)
         {

@@ -32,7 +32,9 @@ namespace ITMS.Controllers
             if (User.Identity.IsAuthenticated) { 
             ViewData["CarInfo"] = PlaceRepository.getUserCar(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             ViewData["UserCheckVisit"] = PlaceRepository.checkVisit(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value),id);
+            ViewData["FuelId"] = new SelectList(new PlacesRepository().getAllFuel(), "Id", "FuelName");
             }
+            ViewData["NumberOfVisists"] = PlaceRepository.VisitsCount(id);
             ViewData["PlaceInfo"] = placeinfo;
             ViewData["AverageRating"] = PlaceRepository.getAverageRating(id);
             try { 
@@ -83,6 +85,14 @@ namespace ITMS.Controllers
         {
             return View();
         }
+
+        public IActionResult AddACar(string Name, int FuelEco, int FuelId, Guid id)
+        {
+            AccountRep.addcar(Name, FuelEco, FuelId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+
+            return RedirectToAction(nameof(PlaceInfo), new { id = id });
+        }
+        
         [HttpPost]
         public IActionResult ShareMoment(tblMoment MomentInfo, List<IFormFile> ifile)
         {
@@ -93,6 +103,7 @@ namespace ITMS.Controllers
         public IActionResult ViewGuiderInfo (Guid id) {
 
             ViewData["GuiderTours"] = PlaceRepository.viewGuiderTours(id);
+            ViewData["CertificateLanguage"] = AccountRep.guiderLanguagesByGUID(id);
             return View(AccountRep.getApplicantInfo(id));
         }
         public IActionResult Moments()
@@ -101,22 +112,7 @@ namespace ITMS.Controllers
             ViewData["AllFilesMoments"] = PlaceRepository.GetAllFilesMoments();
             return View();
         }
-        public IActionResult AddCar(string guid)
-        {
-            ViewData["FuelId"] = new SelectList(new PlacesRepository().getAllFuel(), "Id", "FuelName");
-            return View();
-        }
-        [HttpPost]
-        public IActionResult AddCar(tblCar carInfo)
-        {
-            carInfo.UserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            int result = PlaceRepository.addCar(carInfo);
-            if (result == 1)
-                ViewData["Successful"] = "Car added successfully";
-            else
-                ViewData["Falied"] = "An Error Occurred while processing your request, please try again Later";
-            return View();
-        }
+       
         
         public IActionResult TourInfo(Guid id)
         {

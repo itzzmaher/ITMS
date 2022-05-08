@@ -23,6 +23,7 @@ namespace ITMS.Controllers
             ViewData["TodayDate"] = DateTime.Now.ToString("dd/MM/yyy");
             ViewData["Current_Tours"] = PlaceRepository.ViewPersonalTours(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Count();
             ViewData["Current_Order"] = PlaceRepository.ViewRegisterOrders(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Count();
+            ViewData["Current_Status"] = AccountRep.statusName(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
 
             return View();
         }

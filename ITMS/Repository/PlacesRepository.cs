@@ -45,7 +45,7 @@ namespace ITMS.Repository
                 _context.SaveChanges();
                 return 1;
             }
-            catch (Exception s)
+            catch 
             {
                 return 0;
             }
@@ -56,7 +56,8 @@ namespace ITMS.Repository
         }
         public IEnumerable<tblTour> getAllTours()
         {
-            return _context.tblTour.Where(A=> A.IsDeleted == false);
+
+            return _context.tblTour.Where(A=> A.IsDeleted == false && A.StartDate < DateTime.Now && A.EndDate > DateTime.Now);
         }
         public int EditPlace(tblPlaces PlaceInfo, IFormFile ifile)
         {
@@ -87,7 +88,7 @@ namespace ITMS.Repository
                 _context.SaveChanges();
                 return 1;
             }
-            catch (Exception ec)
+            catch 
             {
                 return 0;
             }
@@ -102,7 +103,7 @@ namespace ITMS.Repository
                 _context.SaveChanges();
                 return 1;
             }
-            catch (Exception ec)
+            catch 
             {
                 return 0;
             }
@@ -122,7 +123,10 @@ namespace ITMS.Repository
         {
             return _context.tblCity;
         }
-
+        public IEnumerable<tblLanguage> getAllLanguages()
+        {
+            return _context.tblLanguage;
+        }
         public IEnumerable<tblCategory> getAllCategories()
         {
             return _context.tblCategory;
@@ -180,7 +184,7 @@ namespace ITMS.Repository
                 _context.SaveChanges();
                 return 1;
             }
-            catch (Exception ss)
+            catch 
             {
                 return 0;
             }
@@ -316,6 +320,7 @@ namespace ITMS.Repository
                     item.CopyToAsync(stream);
                     FileInfo.FileName = item.FileName;
                     FileInfo.MomentId = id;
+                    FileInfo.Type = System.IO.Path.GetExtension(item.FileName);
                     _context.AddAsync(FileInfo);
                     
                 }
@@ -369,6 +374,25 @@ namespace ITMS.Repository
             return check;
 
 
+        }
+        public string VisitsCount(Guid id)
+        {
+            tblPlaces placeInfo = getPlaceInfo(id);
+            int  number =  _context.tblUserVisit.Where(U => U.PlacesId == placeInfo.Id).Count();
+            if (number == 0)
+                return placeInfo.Name +" has no visits recorded";
+            else if (number == 1)
+                return placeInfo.Name +" has one visit recorded";
+            else
+                return placeInfo.Name + " has " + number + " visits recorded";
+        }
+        public tblCar UserCar (int id)
+        {
+            tblCar carInfo = _context.tblCar.SingleOrDefault(C => C.UserId == id);
+            if (carInfo != null)
+                return carInfo;
+            else
+                return null;
         }
     }
 }

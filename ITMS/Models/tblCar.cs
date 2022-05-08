@@ -9,6 +9,7 @@ namespace ITMS.Models
     {
         public int Id { get; set; }
         public int FuelEco { get; set; }
+        public string? Name { get; set; }
         public int UserId { get; set; }
         public tblUsers User { get; set; }
         public int FuelId { get; set; }

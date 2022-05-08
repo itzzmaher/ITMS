@@ -96,7 +96,8 @@
                         </video>
                     </div>*@
                 }
-                else { 
+                else
+                {
                 <img class="img-fluid" src="@("~/Images/" + data.ImgName)" asp-append-version="true" width="750px" height="500px">
                 }
             </div>
@@ -108,8 +109,15 @@
                 <div id="map" @*style="width: 450px; height: 350px;"*@ href="@data.location"> </div>
                 <p>Google Maps Link : <a id="location" href="@data.location">Here</a></p>
                 <hr class="divider" />
-                @if (@ViewData["UserCheckVisit"] == "0") { 
-                <a asp-action="Visit" asp-controller="Places" asp-route-id="@data.GuId">Visit</a>}
+                @ViewData["NumberOfVisists"]
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <small>You visited @data.Name </small>
+                    @if ((int)ViewData["UserCheckVisit"] == 0)
+                    {
+                        <a asp-action="Visit" asp-controller="Places" asp-route-id="@data.GuId">Visit</a>}
+
+                }
                 @if (User.IsInRole("Guider"))
                 {
                     <a asp-action="AddTour" asp-controller="Guider" asp-route-id="@data.GuId">Add tour</a>
@@ -141,8 +149,36 @@
         </div>*@
                 @if (CarData == null && User.Identity.IsAuthenticated)
                 {
-                    <small>To calcaulte the distance to reach @data.Name you need to enter your car info</small>
-                    <a class="btn btn-outline-primary" asp-action="AddCar">Add</a>
+                    @*<small>To calcaulte the distance to reach @data.Name you need to enter your car info</small>
+            <a class="btn btn-outline-primary" asp-controller="Account" asp-action="AddCar">Add</a>*@
+                    @using (Html.BeginForm("AddACar", "Places", FormMethod.Post, new { }))
+                    {
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="col-form-label">Car Economy</label>
+                                <input type="text" name="Name" class="form-control">
+                                <input type="text" name="id" value="@data.GuId" hidden>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="col-form-label">Car Economy</label>
+                                <input type="number" name="FuelEco" class="form-control" step="0.1">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="col-form-label">Gas Type</label>
+                                <select class="form-control custom-select" asp-items="ViewBag.FuelId" name="FuelId"></select>
+
+                            </div>
+                        </div>
+
+
+                        <input class="btn btn-dark btn-search" type='Submit' value='Add' />
+
+                    }
+
                 }
                 else
                 {
@@ -174,25 +210,25 @@
         {
 <form asp-action="AddRating" id="form">
     <p class="container">
-        <input id="radio1" type="radio" value=5 asp-for="Rate">
+        <input id="radio5" type="radio" value=5 asp-for="Rate">
 
-        <label for="radio1">&#9733;</label>
+        <label for="radio5">&#9733;</label>
 
-        <input id="radio2" type="radio" value=4 asp-for="Rate">
+        <input id="radio4" type="radio" value=4 asp-for="Rate">
 
-        <label for="radio2">&#9733;</label>
+        <label for="radio4">&#9733;</label>
       
         <input id="radio3" type="radio"value=3 asp-for="Rate">
         
         <label for="radio3">&#9733;</label>
        
-        <input id="radio4" type="radio"value=2 asp-for="Rate">
+        <input id="radio2" type="radio"value=2 asp-for="Rate">
        
-        <label for="radio4">&#9733;</label>
+        <label for="radio2">&#9733;</label>
        
-        <input id="radio5" type="radio" value=1 asp-for="Rate">
+        <input id="radio1" type="radio" value=1 asp-for="Rate">
        
-        <label for="radio5">&#9733;</label>
+        <label for="radio1">&#9733;</label>
         </p>
         <div class="row top-buffer">
             <div class="col-8">

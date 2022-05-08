@@ -1,0 +1,10 @@
+﻿@{
+    Layout = "/Views/Shared/MyLayout.cshtml";
+}
+@{var data = (tblCar)ViewData["CarInfo"]; }
+
+
+@if (data == null)
+{
+    <small>You didn't add you car info </small>
+}
