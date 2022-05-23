@@ -23,48 +23,6 @@
     <h3 class="text-lg-start">All tours (@Model.Count())</h3>
     @foreach (var item in Model)
     {
-
-        @*<img src="@("~/Images/" + item.ImgName)" asp-append-version="true" width="250" height="250">
-            <div class="row">
-                <div class="col-2">
-                    <div class="row">
-                        <h6>Price</h6>
-                    </div>
-                    <div class="row">
-                        <h6>@item.Price</h6>
-                    </div>
-                </div>
-
-                <div class="col-2">
-                    <div class="row">
-                        <h6>Maximum number of touroists</h6>
-                    </div>
-                    <div class="row">
-                        <h6>@item.MaxTourist</h6>
-                    </div>
-                </div>
-
-                <div class="col-2">
-                    <div class="row">
-                        <h6>Start Date of tours</h6>
-                    </div>
-                    <div class="row">
-                        <h6>@item.StartDate.ToString("yyyy/MMMM/dd")</h6>
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="row">
-                        <h6>End Date of tours</h6>
-                    </div>
-                    <div class="row">
-                        <h6>@item.EndDate.ToString("yyyy/MMMM/dd")</h6>
-                    </div>
-                </div>
-                <div class="col-1">
-                    <a class="btn btn-outline-info" asp-action="TourInfo" asp-controller="Places" asp-route-id="@item.GuId">View</a>
-                </div>
-            </div>*@
-
         <div class="polaroid">
                 <img class="d-block" src="@("~/Images/" + item.ImgName)" asp-append-version="true" style=" width: 250px; height: 250px;">
             <div class="container">
@@ -80,10 +38,10 @@
 
                     <div class="col-2">
                         <div class="row">
-                            <h6>Max. number of tourists</h6>
+                            <h6>Tour Duration</h6>
                         </div>
                         <div class="row">
-                            <h6>@item.MaxTourist</h6>
+                            <h6>@item.MaxTourist (hours)</h6>
                         </div>
                     </div>
 

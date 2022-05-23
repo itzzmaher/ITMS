@@ -93,12 +93,15 @@
             height: 40px;
             background-color: #fff
         }
+    img {
+        max-width: 100%;
+    }
 </style>
 <div class="container mt-5">
     <div class="row d-flex ">
         <div class="col-md-12 justify-content-center">
             <div class="card p-3 py-4">
-                <div class="text-center"> <img src="@("~/Images/" + Model.ImgName)" asp-append-version="true" width="200" height="300"> </div>
+                <div class="text-center"> <img src="@("~/Images/" + Model.ImgName)" asp-append-version="true" > </div>
                 <div class="text-center mt-3">
                     <span class="bg-secondary p-1 px-4 rounded text-white">@Model.City.CityName</span>
 

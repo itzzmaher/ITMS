@@ -10,8 +10,6 @@
                         <th>City</th>
                         <th>Certificate Status</th>
                         <th>End Date of Certificate</th>
-
-
                     </tr>
                 </thead>
                 <tbody>
@@ -25,15 +23,14 @@
                                 <td>@item.City.CityName</td>
                                 <td>@item.Status.StatusName</td>
                                 <td>
-                                    @item.ExpireDate
+                                    @item.ExpireDate.ToString("yyyy-MM-dd")
                                     @{int res = DateTime.Compare(item.ExpireDate, DateTime.Now);
                                         if (res < 0)
                                         {
-                                        <p style="color:red;">Expired</p>
 
+                                            <p style="color:red;">Expired</p>
+                                            <a asp-action="deleteCertificate" asp-route-id="@item.GuId" class="btn btn-outline-danger">Remove</a>
                                         }
-
-
                                     }
                                 </td>
                             </tr>

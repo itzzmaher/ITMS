@@ -20,7 +20,7 @@
         max-width: 490px;
         background: #fff;
         margin: 0 auto;
-        margin-top: 50px;
+        margin-top: 20px;
         border-radius: 3px;
         padding: 30px;
         border-bottom: 1px solid #e6ecf0;
@@ -99,31 +99,46 @@
     IEnumerable<tblFile> File = ViewData["AllFilesMoments"] as IEnumerable<tblFile>;
 }
 <div class="container">
-    <div class="row">
-
+    <div style="margin-left:310px">
+        <a class="btn btn-outline-primary" asp-action="ShareMoment">Share A Moment</a>
+    </div>
 
         @foreach (var item in Moments)
         {
-        <div class="tweet-wrap">
-            <div class="tweet-header">
-                <div class="tweet-header-info">
-                    @item.User.Name <span>
-                    @item.CreationDate.ToString("yyyy/MMMM/dd")
-            </span>
-                                    <p> @Html.Raw(item.Details)</p>
+            <div class="row">
+                <div class="tweet-wrap">
+                    <div class="tweet-header">
+                        <div class="tweet-header-info">
+                            @item.User.Name <span>
+                                @item.CreationDate.ToString("yyyy/MMMM/dd")
+                            </span>
+                            <p> @Html.Raw(item.Details)</p>
 
-                </div>
-            </div>
-                @foreach (var fi in File)
-                {
-                    if (item.Id == fi.MomentId)
+                        </div>
+                    </div>
+                    @foreach (var fi in File)
                     {
-        <div class="tweet-img-wrap">
-            <img class="img-fluid tweet-img" src="@("~/Images/" + fi.FileName)" asp-append-version="true" alt="">
-        </div>
+                        if (item.Id == fi.MomentId)
+                        {
+                            if (fi.Type == ".jpg" || fi.Type == ".png" || fi.Type == ".gif")
+                            {
+                                <div class="tweet-img-wrap">
+                                    <img class="img-fluid tweet-img" src="@("~/Images/" + fi.FileName)" asp-append-version="true" alt="">
+                                </div>
+                            }
+                            else if (fi.Type == ".mp4")
+                            {
+                                <div align="center" class="embed-responsive embed-responsive-16by9">
+                                    <video loop class="embed-responsive-item" controls>
+                                        <source src="@Url.Content("~/Images/" + fi.FileName)" type="video/mp4">
+                                    </video>
+                                </div>
+                            }
+                        }
                     }
-                }
+                </div>
+                    
             </div>
-            }
-        </div>
-</div>
+        }
+    
+    </div>

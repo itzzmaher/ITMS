@@ -27,16 +27,37 @@ namespace ITMS.Controllers
 
             return View();
         }
+        public IActionResult GuiderStatus()
+        {
+
+            ViewData["CertificateLanguage"] = AccountRep.guiderLanguages(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            return View(AccountRep.GuiderInfo(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));
+        }
         public IActionResult Tours()
         {
             
             return View(PlaceRepository.ViewPersonalTours(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));
+        }
+        public IActionResult UpdateTour(Guid id)
+        {
+            return View(PlaceRepository.getTourInfo(id));
+        }
+        [HttpPost]
+        public IActionResult UpdateTour(tblTour tourinfo)
+        {
+            int result = PlaceRepository.updateTour(tourinfo);
+            if (result == 1)
+                ViewData["Successful"] = "The tour has been updated succesfully";
+            else
+                ViewData["Falied"] = "An Error Occurred while processing your request, please try again Later";
+            return View();
         }
         public IActionResult AddTour(Guid id)
         {
             tblPlaces placeinfo = PlaceRepository.getPlaceInfo(id);
             ViewData["id"] = placeinfo.Id;
             ViewData["ImgName"] = placeinfo.ImgName;
+            ViewData["currentDate"] = DateTime.Now;
 
             return View();
         }
@@ -82,7 +103,6 @@ namespace ITMS.Controllers
         }
         public IActionResult WaitingOrders()
         {
-
             return View(PlaceRepository.ViewRegisterOrders(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));
         }
     }

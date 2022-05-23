@@ -33,6 +33,7 @@ namespace ITMS.Controllers
             ViewData["CarInfo"] = PlaceRepository.getUserCar(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             ViewData["UserCheckVisit"] = PlaceRepository.checkVisit(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value),id);
             ViewData["FuelId"] = new SelectList(new PlacesRepository().getAllFuel(), "Id", "FuelName");
+            ViewData["UserRatings"] = PlaceRepository.checkRating(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), id);
             }
             ViewData["NumberOfVisists"] = PlaceRepository.VisitsCount(id);
             ViewData["PlaceInfo"] = placeinfo;
@@ -98,6 +99,10 @@ namespace ITMS.Controllers
         {
             MomentInfo.UserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             int result = PlaceRepository.addMoment(MomentInfo, ifile);
+            if (result == 1)
+                ViewData["Successful"] = "The momemnt were shared successfully";
+            else
+                ViewData["Falied"] = "An Error Occurred while processing your request, please try again Later";
             return View();
         }
         public IActionResult ViewGuiderInfo (Guid id) {
@@ -116,6 +121,8 @@ namespace ITMS.Controllers
         
         public IActionResult TourInfo(Guid id)
         {
+            if(User.Identity.IsAuthenticated)
+            ViewData["checkAvaliablity"] = PlaceRepository.checkYourTour(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), id);
             return View(PlaceRepository.getTourInfo(id));
         }
         public IActionResult RegisterTour (Guid id)
@@ -124,6 +131,7 @@ namespace ITMS.Controllers
             
             tblTour tourinfo = PlaceRepository.getTourInfo(id);
             ViewData["TID"] = tourinfo.Id;
+            ViewData["tourinfo"] = tourinfo;
             return View();
         }
         [HttpPost]

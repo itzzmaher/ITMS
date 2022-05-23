@@ -95,17 +95,25 @@
 </style>
 <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+
 @{ IEnumerable<tblMoment> Moments = ViewData["AllMoments"] as IEnumerable<tblMoment>;
     IEnumerable<tblFile> File = ViewData["AllFilesMoments"] as IEnumerable<tblFile>;
 }
 <div class="container">
-    <div class="row">
 
 
-        @foreach (var item in Moments)
-        {
+
+    @foreach (var item in Moments)
+    {<div class="row">
             <div class="tweet-wrap">
                 <div class="tweet-header">
+                    <a asp-action="deleteMomemnt" asp-route-id="@item.GuId">
+                        <span class='fa-solid fa-delete-left' style='color: red'></span>
+                    </a>
                     <div class="tweet-header-info">
                         @item.User.Name <span>
                             @item.CreationDate.ToString("yyyy/MMMM/dd")
@@ -124,6 +132,7 @@
                     }
                 }
             </div>
-        }
-    </div>
+        </div>
+    }
+
 </div>

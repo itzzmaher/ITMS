@@ -160,6 +160,22 @@ namespace ITMS.Controllers
         }
         public IActionResult GuiderReapply()
         {
+            ViewData["CityId"] = new SelectList(new PlacesRepository().getAllCities(), "Id", "CityName");
+            ViewData["LanguageId"] = new SelectList(new PlacesRepository().getAllLanguages(), "Id", "EngName");
+            return View(AccountRepository.GuiderInfo(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));
+        }
+        [HttpPost]
+        public IActionResult GuiderReapply(tblGuiderCertificate certificateInfo, IFormFile ifile, List<int> lang)
+        {
+            Task<int> Task = AccountRepository.UpdateCertificateDataAsync(certificateInfo, ifile, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), lang);
+            if (((int)Task.Status) ==1)
+            {
+                ViewData["Successful"] = "Your certificate application is updated, it will be reviewed soon ";
+            }
+            else
+            {
+                ViewData["Falied"] = "An Error Occurred while processing your request, please try again Later";
+            }
             return View();
         }
         public IActionResult GuiderApplication()
@@ -181,6 +197,16 @@ namespace ITMS.Controllers
         public IActionResult GuiderApplication(tblGuiderCertificate certificateInfo, IFormFile ifile, List<int> lang)
         {
             Task Task = AccountRepository.addCertificateDataAsync(certificateInfo, ifile, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), lang);
+            
+            if (((int)Task.Status) == 1)
+            {
+                ViewData["Successful"] = "Your certificate application is updated, it will be reviewed soon ";
+            }
+            else
+            {
+                ViewData["Falied"] = "An Error Occurred while processing your request, please try again Later";
+
+            }
             int result = AccountRepository.checkForGuider(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             ViewData["CheckForUserApplication"] = result;
             return View();
@@ -188,7 +214,11 @@ namespace ITMS.Controllers
         public IActionResult GuiderStatus() {
 
             ViewData["CertificateLanguage"] = AccountRepository.guiderLanguages(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
-            return View(AccountRepository.GuiderInfo(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));
+            tblGuiderCertificate gc = AccountRepository.GuiderInfo(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            if (gc == null)
+                return RedirectToAction("GuiderApplication", "Account");
+            else
+            return View(gc);
         }
         public IActionResult EmailCheck()
         {
@@ -313,18 +343,41 @@ namespace ITMS.Controllers
         }
         public IActionResult CarInfo()
         {
-            ViewData["CarInfo"] = PlaceRepository.UserCar(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            ViewData["FuelId"] = new SelectList(new PlacesRepository().getAllFuel(), "Id", "FuelName");
+            return View(PlaceRepository.UserCar(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));
+        }
+        [HttpPost]
+        public IActionResult CarInfo(tblCar carinfo)
+        {
+            int result = PlaceRepository.updateCar(carinfo, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            if (result == 1)
+                ViewData["Successful"] = "Car Updated successfully";
+            else
+                ViewData["Falied"] = "An Error Occurred while processing your request, please try again Later";
             return View();
         }
         public IActionResult Orders()
         {
-            return View();
+
+            return View(PlaceRepository.personalOrder(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));
         }
         public IActionResult PersonalMoments()
         {
             ViewData["AllMoments"] = PlaceRepository.GetPerosnalMoments(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             ViewData["AllFilesMoments"] = PlaceRepository.GetPerosnalFilesMoments(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return View();
+        }
+        public IActionResult CancelByUser(Guid id)
+        {
+            PlaceRepository.cancelByUser(id);
+
+            return RedirectToAction("Orders");
+        }
+         public IActionResult deleteMomemnt(Guid id)
+        {
+            PlaceRepository.deleteMoment(id);
+            return RedirectToAction("PersonalMoments");
+
         }
     }
 }

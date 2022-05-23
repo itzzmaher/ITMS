@@ -1,55 +1,33 @@
 ﻿@model IEnumerable<tblGuiderCertificate>
-
-<div class="card-body">
-    <div id="v-card" class="row justify-content-center" style="margin-top: 44px;">
-        <div class="col-md-8 ">
-            <table id="datatablesSimple">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>City</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{ var i = 1;
-                        foreach (var item in Model)
-                        {
-
+    <div class="container">
+        <div class="card-body">
+            <div id="v-card" class="row justify-content-center" style="margin-top: 44px;">
+                <div class="col-md-12 ">
+                    <table id="datatablesSimple">
+                        <thead>
                             <tr>
-                                <td>@i </td>
-                                <td>@item.User.Name</td>
-                                <td>@item.City.CityName</td>
-                                <td><a asp-controller="Admin" asp-action="ApplicantInfo" asp-route-id="@item.GuId" class="btn btn-outline-secondary">View</a></td>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>City</th>
+                                <th></th>
                             </tr>
-                            i++;
-                        } }
-                </tbody>
-            </table>
+                        </thead>
+                        <tbody>
+                            @{ var i = 1;
+                                foreach (var item in Model)
+                                {
+
+                                    <tr>
+                                        <td>@i </td>
+                                        <td>@item.User.Name</td>
+                                        <td>@item.City.CityName</td>
+                                        <td><a asp-controller="Admin" asp-action="ApplicantInfo" asp-route-id="@item.GuId" class="btn btn-outline-primary">View</a></td>
+                                    </tr>
+                                    i++;
+                                } }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-<script>
-                @{
-                if (@ViewData["Successful"] != null)
-                {
-                    <Text>
-                    var result = '@Html.Raw(ViewData["Successful"])';
-                    Swal.fire(result,'','success')
-                        .then(
-                            function () {
-                                window.location.href = '@Url.Action("ApproveCertificate", "Admin")';
-                            }
-                        );
-                    </Text>
-                    }
-                   else if(@ViewData["Falied"] != null )
-                    {
-                    <Text>
-                        var result = '@Html.Raw(ViewData["Falied"])';
-                        Swal.fire(result,'','error')
-                    </Text>
-                    }
-            }
-</script>

@@ -18,7 +18,7 @@ namespace ITMS.Controllers
 
         public IActionResult ModifyPlaces()
         {
-            return View (PlaceRepository.getAllplaces());
+            return View(PlaceRepository.getAllplaces());
         }
         public IActionResult GasPrice()
         {
@@ -64,7 +64,7 @@ namespace ITMS.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult AddPlace(tblPlaces PlaceInfo, IFormFile ifile )
+        public IActionResult AddPlace(tblPlaces PlaceInfo, IFormFile ifile)
         {
             int result = PlaceRepository.AddPlaceAsync(PlaceInfo, ifile);
             if (result == 1)
@@ -85,7 +85,7 @@ namespace ITMS.Controllers
             string imgExt = Path.GetExtension(PlaceInfo.ImgName);
             int result = PlaceRepository.EditPlace(PlaceInfo, ifile);
             if (result == 1)
-                ViewData["Successful"] = "Place info was modified Successfully";
+                return RedirectToAction("ModifyPlaces");
             else
                 ViewData["Falied"] = "An Error Occurred while processing your request, please try again Later";
             return View();
@@ -109,7 +109,7 @@ namespace ITMS.Controllers
         public IActionResult ApproveCertificate()
         {
             ViewData["CurrentDate"] = DateTime.Now;
-             return View(AccountRep.viewAllWaitingCertificate());
+            return View(AccountRep.viewAllWaitingCertificate());
         }
         public IActionResult ApplicantInfo(Guid id)
         {
@@ -117,7 +117,7 @@ namespace ITMS.Controllers
             ViewData["CertificateLanguage"] = AccountRep.guiderLanguagesByGUID(id);
             return View(AccountRep.getApplicantInfo(id));
         }
-        public IActionResult Approve (Guid id)
+        public IActionResult Approve(Guid id)
         {
             int result = AccountRep.ApproveApplication(id);
             if (result == 1)
@@ -135,6 +135,13 @@ namespace ITMS.Controllers
             else
                 ViewData["Falied"] = "An Error Occurred while processing your request, please try again Later";
             return RedirectToAction("ApproveCertificate");
+        }
+        public IActionResult deleteCertificate(Guid id)
+        {
+            {
+                AccountRep.ExpireCertificate(id);
+                return RedirectToAction("AllGuiders");
+            }
         }
     }
 }

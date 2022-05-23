@@ -38,10 +38,10 @@
 
             <div class="col-2">
                 <div class="row">
-                    <h6>Maximum number of touroists</h6>
+                    <h6>Tour Duration</h6>
                 </div>
                 <div class="row">
-                    <h6>@item.MaxTourist</h6>
+                    <h6>@item.MaxTourist (hours)</h6>
                 </div>
             </div>
 
@@ -62,10 +62,10 @@
                 </div>
             </div>
             <div class="col-1">
-                <a class="btn btn-outline-info" asp-action="TourInfo" asp-controller="Places" asp-route-id="@item.GuId">View Tour</a>
+                <a class="btn btn-outline-info" asp-action="UpdateTour" asp-controller="Guider" asp-route-id="@item.GuId">Update</a>
             </div>
             <div class="col-1">
-                <a class="btn btn-outline-danger" asp-action="DeleteTour" asp-controller="Guider" asp-route-id="@item.GuId">View Tour</a>
+                <a class="btn btn-outline-danger" asp-action="DeleteTour" asp-controller="Guider" asp-route-id="@item.GuId">Delete</a>
             </div>
         </div>
         }

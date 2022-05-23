@@ -9,12 +9,13 @@
             </div>
             <div class="card-body">
                 <form asp-action="RegisterTour" id="form">
-                    <input type="text" asp-for="TourId" value="@ViewData["TID"]" hidden/>
+                    <input type="text" asp-for="TourId" value="@ViewData["TID"]" hidden />
                     <div>
                         <div class="row">
+                            @{var tourinfo = (tblTour)ViewData["tourinfo"]; }
                             <div class="col-md-4">
                                 <label class="col-form-label"> Tour date</label>
-                                <input type="datetime-local" class="form-control" asp-for="TourDate"/>
+                                <input type="datetime-local" class="form-control" asp-for="TourDate" min="@tourinfo.StartDate.ToString("yyyy-MM-ddT00:00")" max="@tourinfo.EndDate.ToString("yyyy-MM-ddT23:59")" />
                             </div>
                         </div>
                         <div class="row">
@@ -23,10 +24,10 @@
                                 <textarea id="summernote" asp-for="Details"></textarea>
                             </div>
                         </div>
-                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-12 " style="margin-top:10px;">
-                            <button type="submit" class="btn btn-dark btn-search" onclick="return Valdation()"> Register </button>
+                            <button type="submit" id ="btn"class="btn btn-dark btn-search" onclick="return Valdation()"> Register </button>
                         </div>
                     </div>
                 </form>
@@ -47,5 +48,35 @@
             ['table', ['table']],
             ['height', ['height']]
         ]
+    });
+</script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        $("#btn").on("click", function () {
+
+            var StartDate = new Date($("#StartDate").val());
+            var EndDate = new Date($("#EndDate").val());
+            var today = new Date();
+            if (StartDate < today) {
+                $("#error").html("Start date of tour should be higher than current date").css("color", "red");
+                return false;
+            }
+            else if (EndDate < StartDate) {
+                $("#error").html("End date of tour should be higer than start date").css("color", "red");
+                return false;
+            }
+            else if (EndDate < today) {
+                $("#error").html("End date of tour should be higher than current date").css("color", "red");
+                return false;
+            }
+            else {
+                $("#error").html("");
+                return true;
+            }
+
+        });
     });
 </script>

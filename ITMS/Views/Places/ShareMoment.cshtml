@@ -5,6 +5,30 @@
 <script src="~/lib/summernote-emoji-master/tam-emoji/js/config.js"></script>
 <script src="~/lib/summernote-emoji-master/tam-emoji/js/tam-emoji.js"></script>
 <div id="v-card" class="d-flex justify-content-center" style="margin-top: 100px;">
+
+    <script>
+                @{
+                if (@ViewData["Successful"] != null)
+                {
+                    <Text>
+                    var result = '@Html.Raw(ViewData["Successful"])';
+                    Swal.fire(result,'','success')
+                        .then(
+                            function () {
+                                window.location.href = '@Url.Action("Moments", "Places")';
+                            }
+                        );
+                    </Text>
+                    }
+                   else if(@ViewData["Falied"] != null )
+                    {
+                    <Text>
+                        var result = '@Html.Raw(ViewData["Falied"])';
+                        Swal.fire(result,'','error')
+                    </Text>
+                    }
+            }
+    </script>
     <div class="card col-md-6">
         <div class="card-header">
             <h3>Add Place</h3>

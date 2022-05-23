@@ -50,7 +50,24 @@ namespace ITMS.Repository
                 return 0;
             }
         }
-            public IEnumerable<tblFuel> getAllFuel()
+        public int updateCar(tblCar carInfo,int userid)
+        {
+            try
+            {
+                tblCar car = _context.tblCar.SingleOrDefault(A => A.UserId == userid);
+                car.FuelEco = carInfo.FuelEco;
+                car.FuelId = carInfo.FuelId;
+                car.Name = carInfo.Name;
+                _context.Update(car);
+                _context.SaveChanges();
+                return 1;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+        public IEnumerable<tblFuel> getAllFuel()
         {
             return _context.tblFuel;
         }
@@ -189,16 +206,45 @@ namespace ITMS.Repository
                 return 0;
             }
         }
+        public int updateTour(tblTour tourInfo)
+        {
+            try
+            {
+                tblTour tourdetails = getTourInfo(tourInfo.GuId);
+                tourdetails.Description = tourInfo.Description;
+                tourdetails.EndDate = tourInfo.EndDate;
+                tourdetails.StartDate = tourInfo.StartDate; 
+                tourdetails.MaxTourist = tourInfo.MaxTourist;
+                tourdetails.Price = tourInfo.Price;
+                tourdetails.TourName = tourInfo.TourName;
+                _context.Update(tourdetails);
+                _context.SaveChanges();
+                return 1;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
         public IEnumerable<tblTour> ViewPersonalTours(int id)
         {
             tblGuiderCertificate GuiderInfo = _context.tblGuiderCertificate.SingleOrDefault(G => G.UserId == id);
-            return _context.tblTour.Include(P => P.Places).AsNoTracking().Include(G => G.Guider).Where(S => S.GuiderId == GuiderInfo.Id && S.IsDeleted == false);
+            return _context.tblTour.Include(P => P.Places).AsNoTracking().Include(G => G.Guider).Where(S => S.GuiderId == GuiderInfo.Id && S.IsDeleted == false );
 
         }
         public IEnumerable<tblTour> viewGuiderTours (Guid id)
         {
             tblGuiderCertificate GuiderInfo = AccountRep.getGuiderByGUID(id);
-            return _context.tblTour.Where(T => T.GuiderId == GuiderInfo.Id && T.IsDeleted == false);
+            return _context.tblTour.Where(T => T.GuiderId == GuiderInfo.Id && T.IsDeleted == false && T.StartDate < DateTime.Now && T.EndDate > DateTime.Now);
+        }
+        public int checkYourTour(int user,Guid id)
+        {
+            tblGuiderCertificate reginfo = _context.tblGuiderCertificate.SingleOrDefault(A => A.UserId == user);
+            IEnumerable<tblTour> tour = _context.tblTour.Where(T => T.GuiderId == reginfo.Id);
+            if (tour.Count() == 0)
+                return 1;
+            else
+                return 0;
         }
         public tblTour getTourInfo (Guid id)
         {
@@ -381,9 +427,14 @@ namespace ITMS.Repository
                     check =  1;
             }
             return check;
-
-
         }
+        public int checkRating(int userID, Guid id)
+        {
+            tblPlaces placeInfo = getPlaceInfo(id);
+            List<tblRating> userVisits = _context.tblRating.Where(U => U.UserId == userID && U.PlacesId == placeInfo.Id).ToList();
+            return userVisits.Count();
+        }
+        
         public string VisitsCount(Guid id)
         {
             tblPlaces placeInfo = getPlaceInfo(id);
@@ -403,5 +454,40 @@ namespace ITMS.Repository
             else
                 return null;
         }
+       public IEnumerable<tblTourRegisteration> personalOrder(int userId)
+        {
+            return _context.tblTourRegisteration.Include(R => R.RegStatus).Include(A => A.Tour).Include(A => A.Tour.Guider.User).Include(A => A.Tour.Places).Where(U => U.UserId == userId);
+        }
+        public int cancelByUser(Guid id)
+        {
+            try
+            {
+                tblTourRegisteration regInfo = getTourRegByGUID(id);
+                regInfo.RegStatusId = 4;
+                _context.Update(regInfo);
+                _context.SaveChanges();
+                return 1;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+        public int deleteMoment(Guid id)
+        {
+            try
+            {
+                tblMoment momInfo = getMomentByGUID(id);
+                momInfo.IsDeleted = true;
+                _context.Update(momInfo);
+                _context.SaveChanges();
+                return 1;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+       
     }
 }

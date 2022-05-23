@@ -7,7 +7,7 @@
                     Swal.fire(result,'','success')
                         .then(
                             function () {
-                                window.location.href = '@Url.Action("Index", "Admin")';
+                                window.location.href = '@Url.Action("ModifyPlaces", "Admin")';
                             }
                         );
                     </Text>
@@ -19,7 +19,7 @@
                         Swal.fire(result,'','error')
                         .then(
                             function () {
-                                window.location.href = '@Url.Action("Index", "Admin")';
+                                window.location.href = '@Url.Action("ModifyPlaces", "Admin")';
                             }
                         );
                     </Text>

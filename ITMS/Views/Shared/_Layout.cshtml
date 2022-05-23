@@ -64,7 +64,7 @@
             <div class="logo">
                 <a href="/"><img src="/assets/img/Logo.jpg" alt="" class="img-fluid"></a>
             </div>
-            <nav id="navbar" class="navbar">
+            <nav id="navbar" class="navbar" >
                 <ul>
                     <li><a class="active" href="/">Home</a></li>
                     @if (User.IsInRole("Admin"))
@@ -88,8 +88,6 @@
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="/Account/Profile">Profile</a></li>
                                 <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="/Account/ChangePassword">Change Password</a></li>
-                                <li><hr class="dropdown-divider" /></li>
                                 <li><a class="dropdown-item" href="/Account/Logout">Logout</a></li>
 
 
@@ -101,14 +99,6 @@
                         <li><a href="/Account/Login">Login</a></li>
                     }
 
-                    @*<li class="dropdown">
-            <a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
-            <ul>
-                <li><a href="#">Deep Drop Down 1</a></li>
-                <li><a href="#">Deep Drop Down 2</a></li>
-                <li><a href="#">Deep Drop Down 3</a></li>
-            </ul>
-        </li>*@
                 </ul>
                 <i class="bi bi-list mobile-nav-toggle"></i>
             </nav>
@@ -116,7 +106,7 @@
         </div>
     </header>
 
-    <main>
+    <main  style="margin-top:30px">
         @RenderBody()
 
     </main>

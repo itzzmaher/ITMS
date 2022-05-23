@@ -1,7 +1,7 @@
 ﻿<div class="container">
         <div class="card-body">
-            <div class="card o-hidden shadow-lg" style="margin-top: 44px; margin-bottom: 44px">
-                <div class="card-deck">
+            <div class=" o-hidden shadow-lg" style="margin-top: 44px; margin-bottom: 44px">
+                <div >
 
                     @{
                         if (ViewData["Places"] == null)
@@ -14,16 +14,18 @@
                             var i = 1;
                             foreach (var item in Places)
                             {
-
-                                <div class="col-md-6 rounded mx-auto card">
-                                    <img src="@("~/Images/"+item.ImgName)" asp-append-version="true" width="250px" height="250px">
-                                    <div class="card-body">
-                                        <h5 class="card-title">@item.Name</h5>
-                                        <p class="card-text">@item.Category.CategoryName</p>
-                                        <a class="btn btn-outline-info" asp-controller="Places" asp-action="PlaceInfo" asp-route-id="@item.GuId">View </a>
-                                    </div>
-                                </div>
-                                i++;
+                        <div class="row ">
+                    <div class="col-md-6 rounded mx-auto card ">
+                        <img src="@("~/Images/"+item.ImgName)" asp-append-version="true" style="margin: 25px 25px 25px 25px " width="250px" height="250px">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Name</h5>
+                            <p class="card-text">@item.Category.CategoryName</p>
+                            <a class="btn btn-outline-info" asp-controller="Places" asp-action="PlaceInfo" asp-route-id="@item.GuId">View </a>
+                        </div>
+                    </div>
+                </div>
+                    i++;
+                
                             }
                         }
                     }

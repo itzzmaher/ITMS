@@ -81,6 +81,9 @@
         color: #fff;
         height: 40px
     }
+    img {
+        max-width: 100%;
+    }
         .buttons a:nth-child(2):hover {
             border: 1px solid #e96b56 !important;
             color: #e96b56;
@@ -96,7 +99,7 @@
     <div class="row d-flex justify-content-center">
         <div class="col-md-7">
             <div class="card p-3 py-4">
-                <div class="text-center"> <img src="@("~/Images/" + Model.ImgName)" asp-append-version="true" width="200" height="300"> </div>
+                <div class="text-center"> <img src="@("~/Images/" + Model.ImgName)" asp-append-version="true"> </div>
                 <div class="text-center mt-3">
                     <h5 class="mt-2 mb-0 marg" >@Model.User.Name</h5>
                     <span class="bg-secondary p-1 px-4 rounded text-white marg">@Model.City.CityName</span>
@@ -117,12 +120,12 @@
                             @if (Model.Status.StatusName == "Rejected")
                             {
                                 <h2>Sorry, you applicatation were rejected</h2>
-                                <a asp-action="GuiderApplication" class="btn btn-outline-primary px-4">Re-Apply</a>
+                                <a asp-action="GuiderReapply" class="btn btn-outline-primary px-4">Re-Apply</a>
                             }
                             else if (Model.Status.StatusName == "Expired")
                             {
                                 <h2>Your liscence is expired</h2>
-                                <a class="btn btn-outline-primary px-4">Re-Apply</a>
+                                <a asp-action="GuiderReapply" class="btn btn-outline-primary px-4">Re-Apply</a>
                             }
                             else if (Model.Status.StatusName == "Waiting")
                             {

@@ -1,14 +1,72 @@
 ﻿@{
     Layout = "/Views/Shared/MyLayout.cshtml";
 }
-@{var data = (tblCar)ViewData["CarInfo"]; }
+@model ITMS.Models.tblCar
 
 
-@if (data == null)
+@if (Model == null)
 {
-    <small>You didn't add you car info </small>
+    <div></div>
 }
 else
-    {
+{
 
-}
+<div class="card">
+    <div class="card-header">
+        <h3>Car Info</h3>
+    </div>
+
+
+    <div class="card-body">
+        <form asp-action="CarInfo" id="form">
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="col-form-label">Car Name</label>
+                    <input type="text" asp-for="Name" class="form-control">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="col-form-label">Car Economy</label>
+                    <input type="number" asp-for="FuelEco" class="form-control" step="0.1">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="col-form-label">Gas Type</label>
+                    <select class="form-control custom-select" asp-items="ViewBag.FuelId" asp-for="FuelId"></select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 " style="text-align: left; margin-top: 30px;">
+                    <button type="submit" class="btn btn-dark btn-search" onclick=" return Valdation()"> Update </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+        }
+        <script>
+                @{
+                if (@ViewData["Successful"] != null)
+                {
+                    <Text>
+                    var result = '@Html.Raw(ViewData["Successful"])';
+                    Swal.fire(result,'','success')
+                        .then(
+                            function () {
+                                window.location.href = '@Url.Action("CarInfo", "Account")';
+                            }
+                        );
+                    </Text>
+                    }
+                   else if(@ViewData["Falied"] != null )
+                    {
+                    <Text>
+                        var result = '@Html.Raw(ViewData["Falied"])';
+                        Swal.fire(result,'','error')
+                    </Text>
+                    }
+            }
+        </script>

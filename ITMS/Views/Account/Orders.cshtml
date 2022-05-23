@@ -1,3 +1,50 @@
 ﻿@{
     Layout = "/Views/Shared/MyLayout.cshtml";
 }
+@model IEnumerable<tblTourRegisteration>
+<div class="card">
+    <div class="card-header">
+        <h3>Perosnal Orders</h3>
+    </div>
+    <div class="card-body">
+
+            <table id="datatablesSimple">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tour Name</th>
+                        <th>Guider Name</th>
+                        <th>Tour Date</th>
+                        <th>Status</th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ var i = 1;
+                        foreach (var item in Model)
+                        {
+
+                            <tr>
+                                <td>@i </td>
+                                <td>@item.Tour.TourName</td>
+                                <td>@item.Tour.Guider.User.Name</td>
+                                <td>@item.TourDate</td>
+                                <td>
+                                    @if (@item.RegStatusId == 2 || @item.RegStatusId == 1)
+                                    {
+                                        <a asp-controller="Account" asp-action="CancelByUser" class="btn btn-outline-warning" asp-route-id="@item.GuId">Cancel</a>
+                                    }
+                                    else
+                                    {
+                                        @item.RegStatus.StatusName
+                                    }
+                                </td>
+                            </tr>
+                            i++;
+                        } }
+                </tbody>
+            </table>
+        </div>
+
+    </div>

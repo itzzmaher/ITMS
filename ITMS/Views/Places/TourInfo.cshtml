@@ -45,16 +45,19 @@
             </div>
             @if (User.Identity.IsAuthenticated)
             {
+                if ((int)ViewData["checkAvaliablity"] == 1)
+                {
                 <div class="row">
                     <a class="btn btn-primary" asp-action="RegisterTour" asp-controller="Places" asp-route-id="@Model.GuId">Register</a>
-                </div>
+                </div>}
             }
             else
             {
-                <h3>You need to log-in to register</h3>
-                <a class="btn btn-primary" asp-action="Login" asp-controller="Account">Login</a>
-            }
-
+                <h3>You need to log-in to register</h3><div class="row">
+        <a class="btn btn-primary" asp-action="Login" asp-controller="Account">Login</a>
         </div>
+    }
+
+</div>
     </div>
 </div>

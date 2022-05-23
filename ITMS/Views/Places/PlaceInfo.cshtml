@@ -109,14 +109,16 @@
                 <div id="map" @*style="width: 450px; height: 350px;"*@ href="@data.location"> </div>
                 <p>Google Maps Link : <a id="location" href="@data.location">Here</a></p>
                 <hr class="divider" />
-                @ViewData["NumberOfVisists"]
+                <h5>@ViewData["NumberOfVisists"]</h5>
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <small>You visited @data.Name </small>
                     @if ((int)ViewData["UserCheckVisit"] == 0)
                     {
-                        <a asp-action="Visit" asp-controller="Places" asp-route-id="@data.GuId">Visit</a>}
-
+                        <a asp-action="Visit" asp-controller="Places" asp-route-id="@data.GuId">Record a Visit</a>}
+                    else
+                    {
+                        <p>You visited @data.Name within the last 24 hours</p>
+                    }
                 }
                 @if (User.IsInRole("Guider"))
                 {
@@ -206,10 +208,12 @@
 
             <h4>Number of Ratings : @Ratings.Count()</h4>}
 
-        if (User.Identity.IsAuthenticated)
-        {
-<form asp-action="AddRating" id="form">
-    <p class="container">
+                        if (User.Identity.IsAuthenticated && (int)ViewData["UserRatings"] == 0) 
+                        {
+                            
+        <form asp-action="AddRating" id="form">
+        
+            <p class="container">
         <input id="radio5" type="radio" value=5 asp-for="Rate">
 
         <label for="radio5">&#9733;</label>

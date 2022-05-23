@@ -1,5 +1,27 @@
 ﻿@model ITMS.Models.tblGuiderCertificate
-
+<script>
+                @{
+                if (@ViewData["Successful"] != null)
+                {
+                    <Text>
+                    var result = '@Html.Raw(ViewData["Successful"])';
+                    Swal.fire(result,'','success')
+                        .then(
+                            function () {
+                                window.location.href = '@Url.Action("GuiderStatus", "Account")';
+                            }
+                        );
+                    </Text>
+                    }
+                   else if(@ViewData["Falied"] != null )
+                    {
+                    <Text>
+                        var result = '@Html.Raw(ViewData["Falied"])';
+                        Swal.fire(result,'','error')
+                    </Text>
+                    }
+            }
+</script>
 <div id="v-card" class="d-flex justify-content-center" style="margin-top: 100px;">
     <div class="card col-md-6">
         @if (User.Identity.IsAuthenticated)
@@ -7,69 +29,92 @@
             int check = (int)ViewData["CheckForUserApplication"];
             if (check == 1)
             {
-        <div class="justify-content-center">
-            <div class="row">
-                <h3 style="margin-top: 20px; margin-bottom: 20px;">You already applied for the guider</h3>
-            </div>
-            <div class="row">
-                <h4>Click <a asp-action="GuiderStatus">Here</a> to view your application status</h4>
-            </div>
-            </div>
+                <div class="justify-content-center">
+                    <div class="row">
+                        <h3 style="margin-top: 20px; margin-bottom: 20px;">You already applied for the guider</h3>
+                    </div>
+                    <div class="row">
+                        <h4>Click <a asp-action="GuiderStatus">Here</a> to view your application status</h4>
+                    </div>
+                </div>
             }
-            else if(check == 0)
+            else if (check == 0)
             {
-            <div class="card-header">
-                <h3>Guider Application</h3>
-            </div>
-            <div class="card-body">
-                <form asp-action="GuiderApplication" id="form" name="form1" enctype="multipart/form-data">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="col-form-label"> Certificate ID</label>
-                            <input class="form-control" type="number" asp-for="CertificateId" />
+                <div class="card-header">
+                    <h3>Guider Application</h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="GuiderApplication" id="form" name="form1" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="col-form-label"> Certificate ID</label>
+                                <input class="form-control" type="number" asp-for="CertificateId" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="col-form-label"> End Date of Lisence</label>
-                            <input class="form-control" type="date" asp-for="ExpireDate" />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="col-form-label"> End Date of Lisence</label>
+                                <input class="form-control" type="date" id="ExpireDate" asp-for="ExpireDate" />
+                                <div style="margin-top: 7px;" id="error"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="col-form-label">City</label>
-                            <select class="form-control" asp-items="ViewBag.CityId" asp-for="CityId"></select>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="col-form-label">City</label>
+                                <select class="form-control" asp-items="ViewBag.CityId" asp-for="CityId"></select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="col-form-label">Languages</label>
-                            <select class="form-control" asp-items="ViewBag.LanguageId"  name="lang" multiple></select>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="col-form-label">Languages</label>
+                                <select class="form-control" asp-items="ViewBag.LanguageId" name="lang" multiple></select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="col-form-label">Picture</label>
-                            <input class="form-control" type="file" name="ifile" />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="col-form-label">Picture</label>
+                                <input class="form-control" type="file" name="ifile" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 " style="text-align: left; margin-top: 30px;">
-                            <button type="submit" class="btn btn-dark btn-search" onclick=" return Valdation()"> Apply </button>
+                        <div class="row">
+                            <div class="col-md-12 " style="text-align: left; margin-top: 30px;">
+                                <button type="submit" id="btn" class="btn btn-dark btn-search" onclick=" return Valdation()"> Apply </button>
+                            </div>
                         </div>
-                    </div>
 
-                </form>
-            </div>
+                    </form>
+                </div>
             }
-            }
-            else
-            {
+        }
+        else
+        {
             <h2>
                 Please Login or Sign up to apply <a type="submit" class="btn btn-dark btn-search" asp-controller="Account" asp-action="LogIn">Login</a>
             </h2>
-            }
-        </div>
+        }
+    </div>
 
 
 </div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        $("#btn").on("click", function () {
+
+            var ExpireDate = new Date($("#ExpireDate").val());
+
+            var today = new Date();
+            if (ExpireDate < today) {
+                $("#error").html("Expire date of tour should be higher than current date").css("color", "red");
+                return false;
+            }
+            else {
+                $("#error").html("");
+                return true;
+            }
+
+        });
+    });
+</script>

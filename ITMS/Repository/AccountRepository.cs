@@ -75,7 +75,7 @@ namespace ITMS.Repository
                 CerInfo.ImgName = ifile.FileName;
                 CerInfo.StatusId = 1;
                 _context.Add(CerInfo);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 tblGuiderCertificate guiderInfo = getGuiderByID(userID);
                 for (int i = 0; i<lang.Count; i++)
                 {
@@ -85,6 +85,27 @@ namespace ITMS.Repository
                     _context.Add(langInfo);
 
                 }
+                _context.SaveChanges();
+                return 1;
+            }
+            catch (Exception ss)
+            {
+                return 0;
+            }
+        }
+        public async Task<int> UpdateCertificateDataAsync(tblGuiderCertificate CerInfo, IFormFile ifile, int userID, List<int> lang)
+        {
+            try
+            {
+                tblGuiderCertificate tblcerDetails = getGuiderByID(userID);
+                tblcerDetails.CertificateId = CerInfo.CertificateId;
+                tblcerDetails.ExpireDate = CerInfo.ExpireDate;
+                var saveimg = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Images", ifile.FileName);
+                var stream = new FileStream(saveimg, FileMode.Create);
+                await ifile.CopyToAsync(stream);
+                tblcerDetails.ImgName = ifile.FileName;
+                tblcerDetails.StatusId = 1;
+                _context.Update(tblcerDetails);
                 _context.SaveChanges();
                 return 1;
             }
@@ -103,7 +124,7 @@ namespace ITMS.Repository
         }
         public IEnumerable<tblGuiderCertificate> viewAllGuiders()
         {
-            return _context.tblGuiderCertificate.Include(S => S.Status).Include(U => U.User).Include(C => C.City);
+            return _context.tblGuiderCertificate.Include(S => S.Status).Include(U => U.User).Include(C => C.City).Where(A => A.StatusId == 2);
         }
         public IEnumerable<tblUsers> viewAllTourists()
         {
@@ -280,8 +301,13 @@ namespace ITMS.Repository
             carInfo.UserId = userID;
             _context.Add(carInfo);
             _context.SaveChanges();
-
-
+        }
+        public void ExpireCertificate(Guid id)
+        {
+            tblGuiderCertificate cerinfo = getGuiderByGUID(id);
+            cerinfo.StatusId = 4;
+            _context.Update(cerinfo);
+            _context.SaveChanges();
         }
     }
 }

@@ -1,0 +1,115 @@
+﻿@model ITMS.Models.tblTour
+<link href="~/lib/summernote-0.8.18-dist/summernote-lite.css" rel="stylesheet" />
+<script src="~/lib/summernote-0.8.18-dist/summernote-lite.js"></script>
+<div id="v-card" class="d-flex justify-content-center" style="margin-top: 100px;">
+    <div class="card col-md-6">
+        <div class="card-header">
+            <h3>Update Tour</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="UpdateTour" id="form" name="form1" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-8">
+                        <label class="col-form-label">Tour Name</label>
+                        <input type="text" class="form-control " asp-for="TourName" />
+                        <input type="text" class="form-control " hidden asp-for="GuId" />
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="col-form-label"> Price (SR)</label>
+                        <input type="number" class="form-control " asp-for="Price"/>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="col-form-label"> Duration (hours) </label>
+                        <input type="number" class="form-control " asp-for="MaxTourist" min="0.5" max="23.5" step="0.5"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="col-form-label"> Start Date of Tours</label>
+                        <input type="datetime-local" class="form-control" asp-for="StartDate" id="StartDate" />
+                        <div style="margin-top: 7px;" id="error"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="col-form-label"> End Date of Tours</label>
+                        <input type="datetime-local" class="form-control" asp-for="EndDate" id="EndDate" />
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-form-label"> Description</label>
+                    <textarea id="summernote" asp-for="Description"></textarea>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 " style="text-align: left; margin-top: 30px;">
+                        <button type="submit" id="btn" class="btn btn-dark btn-search" onclick=" return Valdation()"> Update </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#summernote').summernote({
+        fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24'],
+        toolbar: [
+            // [groupName, [list of button]]
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font', ['strikethrough', 'superscript', 'subscript']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['height', ['height']]
+        ]
+    });
+</script>
+<script>
+     @{
+        if (@ViewData["Successful"] != null)
+                {
+                    <Text>
+                    var result = '@Html.Raw(ViewData["Successful"])';
+                    Swal.fire(result,'','success')
+                        .then(
+                            function () {
+                                window.location.href = '@Url.Action("Tours", "Guider")';
+                            }
+                        );
+                    </Text>
+    }
+     else if(@ViewData["Failed"] != null )
+                    {
+                    <Text>
+                        var result = '@Html.Raw(ViewData["Failed"])';
+                        Swal.fire(result,'','error')
+                    </Text>
+                    }}
+</script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        $("#btn").on("click", function () {
+
+            var StartDate = new Date($("#StartDate").val());
+            var EndDate = new Date($("#EndDate").val());
+            var today = new Date();
+            if (EndDate < StartDate) {
+                $("#error").html("End date of tour should be higer than start date").css("color", "red");
+                return false;
+            }
+            else if (EndDate < today) {
+                $("#error").html("End date of tour should be higher than current date").css("color", "red");
+                return false;
+            }
+            else {
+                $("#error").html("");
+                return true;}
+
+        });
+    });
+</script>
