@@ -161,6 +161,11 @@
     <None Include="wwwroot\lib\summernote-0.8.18-dist\summernote.js.map" />
     <None Include="wwwroot\lib\summernote-0.8.18-dist\summernote.min.js" />
     <None Include="wwwroot\lib\summernote-0.8.18-dist\summernote.min.js.map" />
+    <None Include="wwwroot\lib\summernote-emoji-master\.gitignore" />
+    <None Include="wwwroot\lib\summernote-emoji-master\README.md" />
+    <None Include="wwwroot\lib\summernote-emoji-master\tam-emoji\js\config.js" />
+    <None Include="wwwroot\lib\summernote-emoji-master\tam-emoji\js\tam-emoji.js" />
+    <None Include="wwwroot\lib\summernote-emoji-master\tam-emoji\js\tam-emoji.min.js" />
     <None Include="wwwroot\lib\sweetalert2\sweetalert2.all.js" />
     <None Include="wwwroot\lib\sweetalert2\sweetalert2.all.min.js" />
     <None Include="wwwroot\lib\sweetalert2\sweetalert2.js" />

@@ -320,5 +320,11 @@ namespace ITMS.Controllers
         {
             return View();
         }
+        public IActionResult PersonalMoments()
+        {
+            ViewData["AllMoments"] = PlaceRepository.GetPerosnalMoments(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            ViewData["AllFilesMoments"] = PlaceRepository.GetPerosnalFilesMoments(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            return View();
+        }
     }
 }

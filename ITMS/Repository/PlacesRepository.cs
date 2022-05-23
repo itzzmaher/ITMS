@@ -307,6 +307,7 @@ namespace ITMS.Repository
             {
                 MomentInfo.GuId = Guid.NewGuid();
                 MomentInfo.IsDeleted = false;
+                MomentInfo.CreationDate = DateTime.Now;
                 _context.Add(MomentInfo);
                 _context.SaveChanges();
                 tblMoment mInfo = getMomentByGUID(MomentInfo.GuId);
@@ -336,9 +337,17 @@ namespace ITMS.Repository
         {
             return _context.tblMoments.Include(U => U.User).Where(A => A.IsDeleted == false);
         }
-        public IEnumerable<tblFile> GetAllFilesMoments()
+        public IEnumerable<tblFile> GetAllFilesMoments( )
         {
-            return _context.tblFile.Include(M => M.Moment).Where(A => A.Moment.IsDeleted == false);
+            return _context.tblFile.Include(M => M.Moment).Where(A => A.Moment.IsDeleted == false );
+        }
+        public IEnumerable<tblMoment> GetPerosnalMoments(int userID)
+        {
+            return _context.tblMoments.Include(U => U.User).Where(A => A.IsDeleted == false && A.UserId == userID);
+        }
+        public IEnumerable<tblFile> GetPerosnalFilesMoments(int userID)
+        {
+            return _context.tblFile.Include(M => M.Moment).Where(A => A.Moment.IsDeleted == false && A.Moment.UserId == userID);
         }
         public int addVisit(Guid id,int userID)
         {
