@@ -114,12 +114,12 @@
                             if (res > 0)
                             {
                                 <a asp-action="Approve" asp-controller="Admin" asp-route-id="@Model.GuId" asp-route-status="Approve" class="btn btn-primary px-4">Approve</a>
-                                <a asp-action="Approve" asp-controller="Admin" asp-route-id="@Model.GuId" asp-route-status="Deny" class="btn btn-outline-primary px-4 ms-3">Deny</a>
+                                <a asp-action="Deny" asp-controller="Admin" asp-route-id="@Model.GuId" asp-route-status="Deny" class="btn btn-outline-primary px-4 ms-3">Deny</a>
                             }
                             else
                             {
                                 <span> Liscence is Expired</span>
-                                <a asp-action="Approve" asp-controller="Admin" asp-route-id="@Model.GuId" asp-route-status="Deny" class="btn btn-outline-primary px-4 ms-3">Deny</a>
+                                <a asp-action="Deny" asp-controller="Admin" asp-route-id="@Model.GuId" asp-route-status="Deny" class="btn btn-outline-primary px-4 ms-3">Deny</a>
                             }
                         }
                     </div>

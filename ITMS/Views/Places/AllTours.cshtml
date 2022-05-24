@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<tblTour>
+    <title>Tours | ITMS</title>
 <style>
     img {
         border: 1px solid #ddd;
@@ -8,7 +9,6 @@
     }
 
     div.polaroid {
-        width: 80%;
         background-color: white;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         margin-bottom: 25px;
@@ -24,47 +24,26 @@
     @foreach (var item in Model)
     {
         <div class="polaroid">
-                <img class="d-block" src="@("~/Images/" + item.ImgName)" asp-append-version="true" style=" width: 250px; height: 250px;">
+            <img class="d-block" src="@("~/Images/" + item.ImgName)" asp-append-version="true" style=" width: 250px; height: 250px;">
             <div class="container">
-                <div class="row text-lg-start">
-                    <div class="col-2">
-                        <div class="row">
-                            <h6>Price</h6>
-                        </div>
-                        <div class="row">
-                            <h6>@item.Price</h6>
-                        </div>
-                    </div>
-
-                    <div class="col-2">
-                        <div class="row">
-                            <h6>Tour Duration</h6>
-                        </div>
-                        <div class="row">
-                            <h6>@item.MaxTourist (hours)</h6>
-                        </div>
-                    </div>
-
-                    <div class="col-2">
-                        <div class="row">
-                            <h6>Start Date of tours</h6>
-                        </div>
-                        <div class="row">
-                            <h6>@item.StartDate.ToString("yyyy/MMMM/dd")</h6>
-                        </div>
-                    </div>
-                    <div class="col-2">
-                        <div class="row">
-                            <h6>End Date of tours</h6>
-                        </div>
-                        <div class="row">
-                            <h6>@item.EndDate.ToString("yyyy/MMMM/dd")</h6>
-                        </div>
-                    </div><div class="col-1"></div>
-                    <div class="col-1">
-                        <a class="btn btn-outline-info" asp-action="TourInfo" asp-controller="Places" asp-route-id="@item.GuId">View</a>
-                    </div>
-                </div>
+                <table class="table">
+                    <tr>
+                        <td>Tour Name</td>
+                        <td>Price</td>
+                        <td>Tour Duration</td>
+                        <td>Start Date of tours</td>
+                        <td>End Date of tours</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>@item.TourName </td>
+                        <td>@item.Price (SR)</td>
+                        <td>@item.MaxTourist (hours)</td>
+                        <td>@item.StartDate.ToString("yyyy/MMMM/dd")</td>
+                        <td>@item.EndDate.ToString("yyyy/MMMM/dd")</td>
+                        <td colspan="2"> <a class="btn btn-outline-info" asp-action="Tour" asp-controller="Places" asp-route-id="@item.GuId">View</a></td>
+                    </tr>
+                </table>
             </div>
         </div>
     }

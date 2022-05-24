@@ -1,9 +1,15 @@
 ﻿@model ITMS.Models.tblRating
+@{var data = (tblPlaces)ViewData["PlaceInfo"]; }
+@{var CarData = (tblCar)ViewData["CarInfo"]; }
 @using System.IO;
+<head>
+    <title>@data.Name | ITMS</title>
+</head>
 <link href="~/lib/summernote-0.8.18-dist/summernote-lite.css" rel="stylesheet" />
 <script src="~/lib/summernote-0.8.18-dist/summernote-lite.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
 
@@ -47,7 +53,7 @@
     }
 
     .clasificacion {
-        direction: rtl;
+        direction: ltr;
         unicode-bidi: bidi-override;
     }
 
@@ -60,10 +66,75 @@
         color: orange;
     }
 
+    .fon {
+        font-size: 15px;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+
+    .collapsible {
+        background-color: #777;
+        color: white;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+    }
+
+    .sha {
+        box-shadow: rgba(0, 0.15, 0, 0.15) 1.95px 1.95px 2.6px;
+    }
+
+
+
+
+
+
+
+
+    .collapsible:after {
+        content: '\002B';
+        color: white;
+        font-weight: bold;
+        float: right;
+        margin-left: 5px;
+    }
+
+    .active:after {
+        content: "\2212";
+    }
+
+    .content {
+        padding: 0 18px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.2s ease-out;
+        background-color: #f1f1f1;
+    }
+
+    img {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+        margin: 10px 10px 10px 10px;
+    }
+
+    div.polaroid {
+        background-color: white;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        margin-bottom: 25px;
+    }
+
+    div.container {
+        padding: 10px 20px;
+    }
 </style>
-@{var data = (tblPlaces)ViewData["PlaceInfo"]; }
-@{var CarData = (tblCar)ViewData["CarInfo"]; }
-<div class="container">
+
+
+
+<div class="container" style="box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;">
     @if (data == null)
     {
         <div class="text-center">
@@ -74,90 +145,58 @@
     }
     else
     {
-
+        <a asp-action="ViewPlaces" class="button-81" style="margin-top:5px"> &#8592; Back</a>
         <h1 class="my-4">
             <small>@data.Name</small>
         </h1>
 
-        <div class="row">
+        <div class="row" >
 
-            <div class="col-md-8">
-                @{ var ext = System.IO.Path.GetExtension(data.ImgName);}
-                @if (ext == ".mp4")
-                {
-                <div align="center" class="embed-responsive embed-responsive-16by9">
-                    <video autoplay loop class="embed-responsive-item" controls>
-                        <source src="@Url.Content("~/Images/" + data.ImgName)" type="video/mp4">
-                    </video>
-                </div>
-                    @*<div class="video-frame">
-                        <video style="width:250px; height:150px;" controls>
-                            <source src="@Url.Content("~/Images/" + data.ImgName)" type="video/mp4" />
-                        </video>
-                    </div>*@
-                }
-                else
-                {
-                <img class="img-fluid" src="@("~/Images/" + data.ImgName)" asp-append-version="true" width="750px" height="500px">
-                }
+            <div class="col-md-8 sha">
+                <img class="img-fluid" src="@("~/Images/" + data.ImgName)" asp-append-version="true" width="750" height="500">
             </div>
 
-            <div class="col-md-4">
-                <h2 class="my-3">Place Description</h2>
-                <p>Date of Creation : <span style="color:dimgray">@data.CreationDate.ToString("yyyy/MMMM/dd")</span></p>
-                <p> <span style="color:dimgray">@data.Category.CategoryName</span></p>
-                <div id="map" @*style="width: 450px; height: 350px;"*@ href="@data.location"> </div>
+            <div class="col-md-4 fon sha">
+                <p style="margin-top:80px">Date of Creation : <span style="color:dimgray">@data.CreationDate.ToString("yyyy/MMMM/dd")</span></p>
+                <p><span style="color:dimgray">Category : </span>@data.Category.CategoryName</p>
+
                 <p>Google Maps Link : <a id="location" href="@data.location">Here</a></p>
+
+                <p>@ViewData["NumberOfVisists"]</p>
                 <hr class="divider" />
-                <h5>@ViewData["NumberOfVisists"]</h5>
+                <div id="map" href="@data.location"> </div>
                 @if (User.Identity.IsAuthenticated)
                 {
                     @if ((int)ViewData["UserCheckVisit"] == 0)
                     {
-                        <a asp-action="Visit" asp-controller="Places" asp-route-id="@data.GuId">Record a Visit</a>}
+                        <a asp-action="Visit" asp-controller="Places" asp-route-id="@data.GuId">Add a Visit</a>}
                     else
                     {
-                        <p>You visited @data.Name within the last 24 hours</p>
+                        <p>You visited <span style="color:dimgray">@data.Name</span> within the last 24 hours</p>
                     }
                 }
                 @if (User.IsInRole("Guider"))
                 {
+                    <hr />
                     <a asp-action="AddTour" asp-controller="Guider" asp-route-id="@data.GuId">Add tour</a>
                 }
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div id="Distance"></div>
+                    <p id="msg"></p>
+                    <div id="msg2"></div>
+                    <a class="button-62" id="mapFunction" onclick="initMap()">Calculate Distance</a>
+                }
 
-                <div id="Distance"></div>
-                <p id="msg"></p>
 
-                @*<div class="row">
-            <div class="col-md-6">
-                <label class="col-form-label">Fuel type</label>
-                <select id="Ftype" class="form-control custom-select">
-                    <option value="91">91</option>
-                    <option value="95">95</option>
-                </select>
 
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <label class="col-form-label">Fuel Economy</label>
-                <select id="Economy" class="form-control custom-select">
-                    <option value="17">Excellent 15 and above</option>
-                    <option value="13">Average 10-15</option>
-                    <option value="8">Poor bellow 10 </option>
-                </select>
-
-            </div>
-        </div>*@
                 @if (CarData == null && User.Identity.IsAuthenticated)
                 {
-                    @*<small>To calcaulte the distance to reach @data.Name you need to enter your car info</small>
-            <a class="btn btn-outline-primary" asp-controller="Account" asp-action="AddCar">Add</a>*@
                     @using (Html.BeginForm("AddACar", "Places", FormMethod.Post, new { }))
                     {
                         <div class="row">
                             <div class="col-md-6">
-                                <label class="col-form-label">Car Economy</label>
+                                <label class="col-form-label">Car Name</label>
                                 <input type="text" name="Name" class="form-control">
                                 <input type="text" name="id" value="@data.GuId" hidden>
                             </div>
@@ -182,11 +221,10 @@
                     }
 
                 }
-                else
-                {
-                    <a class="btn btn-primary " id="mapFunction" onclick="initMap()">Calculate Price</a>
-                    <div id="msg2"></div>
-                }
+
+
+
+
             </div>
 
         </div>
@@ -197,69 +235,100 @@
             <p>@Html.Raw(data.Description)</p>
         </div>
         <hr class="divider" />
+
+        IEnumerable<tblTour> tours = ViewData["tours"] as IEnumerable<tblTour>;
+
+        @if (tours.Count() != 0)
+        {
+            <button class="collapsible">Avaliable Tours(@tours.Count())</button>
+            <div class="content">
+                @foreach (var item in tours)
+                {
+                    <img class="d-block" src="@("~/Images/" + item.ImgName)" asp-append-version="true" style=" width: 250px; height: 250px;">
+                    <table class="table">
+                        <tr>
+                            <td>Tour Name</td>
+                            <td>Price</td>
+                            <td>Tour Duration</td>
+                            <td>Start Date of tours</td>
+                            <td>End Date of tours</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>@item.TourName </td>
+                            <td>@item.Price (SR)</td>
+                            <td>@item.MaxTourist (hours)</td>
+                            <td>@item.StartDate.ToString("yyyy/MMMM/dd")</td>
+                            <td>@item.EndDate.ToString("yyyy/MMMM/dd")</td>
+                            <td rowspan="2"> <a class="btn btn-outline-info" asp-action="TourInfo" asp-controller="Places" asp-route-id="@item.GuId">View</a></td>
+                        </tr>
+                    </table>
+                }
+            </div>
+            <hr class="divider" />}
         <div class="row top-buffer"></div>
         IEnumerable<tblRating> Ratings = ViewData["Ratings"] as IEnumerable<tblRating>;
         if (Ratings.Count() > 0)
         {
 
 
-            <h4>Average Rating : @ViewData["AverageRating"]</h4>
+            <p>Average Rating : @ViewData["AverageRating"]</p>
             <div class="row top-buffer"></div>
 
-            <h4>Number of Ratings : @Ratings.Count()</h4>}
+            <p>Number of Ratings : @Ratings.Count()</p>}
 
-                        if (User.Identity.IsAuthenticated && (int)ViewData["UserRatings"] == 0) 
-                        {
-                            
-        <form asp-action="AddRating" id="form">
-        
-            <p class="container">
-        <input id="radio5" type="radio" value=5 asp-for="Rate">
-
-        <label for="radio5">&#9733;</label>
-
-        <input id="radio4" type="radio" value=4 asp-for="Rate">
-
-        <label for="radio4">&#9733;</label>
-      
-        <input id="radio3" type="radio"value=3 asp-for="Rate">
-        
-        <label for="radio3">&#9733;</label>
-       
-        <input id="radio2" type="radio"value=2 asp-for="Rate">
-       
-        <label for="radio2">&#9733;</label>
-       
-        <input id="radio1" type="radio" value=1 asp-for="Rate">
-       
-        <label for="radio1">&#9733;</label>
-        </p>
-        <div class="row top-buffer">
-            <div class="col-8">
-                <textarea id="summernote" asp-for="Details"></textarea><br />
-            </div>
-        </div>
-        <input type="text" value="@data.Id" asp-for="PlacesId" hidden />
-        <button type="submit" id="do_it" class="btn btn-outline-info" onclick="return Valdation()">Submit</button>
-
-</form>
-        }
-
-
-        var i = 1;
-
-        foreach (var item in Ratings)
+        if (User.Identity.IsAuthenticated && (int)ViewData["UserRatings"] == 0)
         {
-            <div class="row top-buffer">
-                <div class="col-md-4">
-                    <div class="card-body">
-                        <h5 class="card-title">@item.User.Name</h5>
-                        <p class="card-text">@item.Rate / 5</p>
-                        <p>@Html.Raw(@item.Details)</p>
+
+            <form asp-action="AddRating" id="form">
+
+                <div class="container">
+                    <p>Review <span style="color:dimgray">@data.Name</span></p>
+                    <input id="radio5" type="radio" value=5 asp-for="Rate">
+
+                    <label for="radio5">&#9733;</label>
+
+                    <input id="radio4" type="radio" value=4 asp-for="Rate">
+
+                    <label for="radio4">&#9733;</label>
+
+                    <input id="radio3" type="radio" value=3 asp-for="Rate">
+
+                    <label for="radio3">&#9733;</label>
+
+                    <input id="radio2" type="radio" value=2 asp-for="Rate">
+
+                    <label for="radio2">&#9733;</label>
+
+                    <input id="radio1" type="radio" value=1 asp-for="Rate">
+
+                    <label for="radio1">&#9733;</label>
+                </div>
+                <div class="row top-buffer">
+                    <div class="col-8">
+                        <textarea id="summernote" asp-for="Details"></textarea><br />
                     </div>
                 </div>
-            </div>
-            i++;
+                <input type="text" value="@data.Id" asp-for="PlacesId" hidden />
+                <button type="submit" id="do_it" class="btn btn-outline-info" onclick="return Valdation()">Submit</button>
+
+            </form>
+        }
+        foreach (var item in Ratings)
+        {
+            <div class="row card top-buffer">
+                    <div >
+                        <div class="card-header"><p>@item.User.Name  @item.DateTime?.ToString("g")</p></div>
+                        <div class="card-body">
+                            @for (int i = 0; i < item.Rate; i++)
+                            {
+                            <span class="fa fa-star checked"></span>
+                            }
+                            <p>@Html.Raw(@item.Details)</p>
+                        </div>
+                    </div>
+                </div>
+
         }
 
     }
@@ -268,21 +337,14 @@
     $('#summernote').summernote({
         fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24'],
         toolbar: [
-            // [groupName, [list of button]]
-            ['style', ['bold', 'italic', 'underline', 'clear']],
-            ['font', ['strikethrough', 'superscript', 'subscript']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['height', ['height']]
+
         ]
     });
 </script>
 
 @if (CarData != null)
 {
-    <script>
+<script>
 
     // Initialize and add the map
     function initMap() {
@@ -291,25 +353,26 @@
         function success(pos) {
             var crd = pos.coords;
             var msg = document.getElementById("map");
-            msg.style.width = "450px";
+            msg.style.width = "350px";
             msg.style.height = "350px";
+            document.getElementById('mapFunction').style.display = 'none';
             const center = { lat: crd.latitude, lng: crd.longitude };
             const options = { zoom: 15, scaleControl: true, center: center };
             map = new google.maps.Map(
                 document.getElementById('map'), options);
-            const dakota = { lat: crd.latitude, lng: crd.longitude };
-            const frick = { lat: @ViewData["lon"], lng: @ViewData["lat"] };
+            const destinationA = { lat: crd.latitude, lng: crd.longitude };
+            const destinationB = { lat: @ViewData["lon"], lng: @ViewData["lat"] };
             // The markers for The Dakota and The Frick Collection
-            var mk1 = new google.maps.Marker({ position: dakota, map: map });
-            var mk2 = new google.maps.Marker({ position: frick, map: map });
+            var mk1 = new google.maps.Marker({ position: destinationA, map: map });
+            var mk2 = new google.maps.Marker({ position: destinationB, map: map });
                     let directionsService = new google.maps.DirectionsService();
                     let directionsRenderer = new google.maps.DirectionsRenderer();
                     directionsRenderer.setMap(map); // Existing map object displays directions
                                                     // Create route from existing points used for markers
                     const route = {
-                origin: dakota,
-                destination: frick,
-                travelMode: 'DRIVING'
+                        origin: destinationA,
+                        destination: destinationB,
+                        travelMode: 'DRIVING'
                }
 
                 directionsService.route(route,
@@ -326,13 +389,13 @@
                         }
                         else {
                             document.getElementById('Distance').innerHTML = " Driving distance is " + directionsData.distance.text + " (" + directionsData.duration.text + ").";
-                            var cost = ((directionsData.distance.value / 1000) / @CarData.FuelEco) * @CarData.Fuel.Price;
 
+                            var cost = ((directionsData.distance.value / 1000) / @CarData.FuelEco) * @CarData.Fuel.Price;
                             document.getElementById('msg2').innerHTML = "Cost to drive " + cost.toFixed(2) + " SAR";
-                        }
+
+                            }
                     }
                 });
-
 
         }
         function error(err) {
@@ -341,7 +404,24 @@
         navigator.geolocation.getCurrentPosition(success, error);
 
     }
-    </script>
+    
+</script>
 }
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8nGzbiKU7I2OYSfkFrrzOalu8wV8DE2o">
+</script>
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        });
+    }
 </script>

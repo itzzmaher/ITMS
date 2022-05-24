@@ -50,6 +50,9 @@ namespace ITMS.Repository
                 return 0;
             }
         }
+        public IEnumerable <tblTour> getPlaceTours(Guid id) {
+            return _context.tblTour.Include(A => A.Guider.User).Include(P => P.Places).Where(A => A.Places.GuId == id && A.IsDeleted == false && A.StartDate < DateTime.Now && A.EndDate > DateTime.Now && A.Guider.StatusId == 2);
+        }
         public int updateCar(tblCar carInfo,int userid)
         {
             try
@@ -74,7 +77,7 @@ namespace ITMS.Repository
         public IEnumerable<tblTour> getAllTours()
         {
 
-            return _context.tblTour.Where(A=> A.IsDeleted == false && A.StartDate < DateTime.Now && A.EndDate > DateTime.Now);
+            return _context.tblTour.Where(A=> A.IsDeleted == false && A.StartDate < DateTime.Now && A.EndDate > DateTime.Now && A.Guider.StatusId == 2);
         }
         public int EditPlace(tblPlaces PlaceInfo, IFormFile ifile)
         {
@@ -173,6 +176,8 @@ namespace ITMS.Repository
         public void addRate (tblRating rateInfo, int userID)
         {
             rateInfo.UserId = userID;
+            rateInfo.GuId = Guid.NewGuid();
+            rateInfo.DateTime = DateTime.Now;
             _context.Add(rateInfo);
             _context.SaveChanges();
 
@@ -383,6 +388,14 @@ namespace ITMS.Repository
         {
             return _context.tblMoments.Include(U => U.User).Where(A => A.IsDeleted == false);
         }
+        public IEnumerable<tblMoment> GetAllUserMoments(Guid id)
+        {
+            return _context.tblMoments.Include(U => U.User).Where(A => A.IsDeleted == false && A.User.GuId == id);
+        }
+        public IEnumerable<tblFile> GetAllUserFilesMoments(Guid id)
+        {
+            return _context.tblFile.Include(M => M.Moment).Where(A => A.Moment.IsDeleted == false && A.Moment.User.GuId == id);
+        }
         public IEnumerable<tblFile> GetAllFilesMoments( )
         {
             return _context.tblFile.Include(M => M.Moment).Where(A => A.Moment.IsDeleted == false );
@@ -440,11 +453,9 @@ namespace ITMS.Repository
             tblPlaces placeInfo = getPlaceInfo(id);
             int  number =  _context.tblUserVisit.Where(U => U.PlacesId == placeInfo.Id).Count();
             if (number == 0)
-                return placeInfo.Name +" has no visits recorded";
-            else if (number == 1)
-                return placeInfo.Name +" has one visit recorded";
+                return placeInfo.Name +" has no visits";
             else
-                return placeInfo.Name + " has " + number + " visits recorded";
+                return placeInfo.Name + " has " + number + " visit(s)";
         }
         public tblCar UserCar (int id)
         {

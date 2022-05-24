@@ -105,7 +105,12 @@ namespace ITMS.Controllers
                         CookieAuthenticationDefaults.AuthenticationScheme,
                         principal);
                     ViewData["Login_success"] = "You logged in successfully";
-                    return View();
+                    if (TempData["TourGuId"].ToString() != null) {
+                        TempData.Keep("TourGuId");
+                        return RedirectToAction("RegisterTour", "Places");
+                    }
+                    else
+                        return View();
                 }
             }
             catch

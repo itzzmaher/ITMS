@@ -16,6 +16,7 @@
         margin-right: 15px;
     }
 
+
     .tweet-wrap {
         max-width: 490px;
         background: #fff;
@@ -95,51 +96,51 @@
 </style>
 <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-@{  IEnumerable<tblMoment> Moments = ViewData["AllMoments"] as IEnumerable<tblMoment>;
+@{ IEnumerable<tblMoment> Moments = ViewData["AllMoments"] as IEnumerable<tblMoment>;
     IEnumerable<tblFile> File = ViewData["AllFilesMoments"] as IEnumerable<tblFile>;
 }
 <div class="container">
     <div style="margin-left:310px">
-        <a class="button-18" asp-action="ShareMoment">Share A Moment</a>
+        <a class="button-81" asp-action="Moments"> &#8592; Back</a>
     </div>
 
-        @foreach (var item in Moments)
-        {
-            <div class="row">
-                <div class="tweet-wrap">
-                    <div class="tweet-header">
-                        <div class="tweet-header-info">
-                            <a asp-action="userMomemnts" asp-route-id="@item.User.GuId">@item.User.Name</a> <span>
-                                @item.CreationDate.ToString("g")
-                            </span>
-                            <p> @Html.Raw(item.Details)</p>
+    @foreach (var item in Moments)
+    {
+        <div class="row">
+            <div class="tweet-wrap">
+                <div class="tweet-header">
+                    <div class="tweet-header-info">
+                        <a asp-action="userMomemnts" asp-route-id="@item.User.GuId">@item.User.Name</a> <span>
+                            @item.CreationDate.ToString("g")
+                        </span>
+                        <p> @Html.Raw(item.Details)</p>
 
-                        </div>
                     </div>
-                    @foreach (var fi in File)
+                </div>
+                @foreach (var fi in File)
+                {
+                    if (item.Id == fi.MomentId)
                     {
-                        if (item.Id == fi.MomentId)
+                        <div style="margin-bottom:10px"></div>
+                        if (fi.Type == ".jpg" || fi.Type == ".png" || fi.Type == ".gif")
                         {
-                            <div style="margin-bottom:10px"></div>
-                            if (fi.Type == ".jpg" || fi.Type == ".png" || fi.Type == ".gif")
-                            {
-                                <div class="tweet-img-wrap">
-                                    <img class="img-fluid tweet-img" src="@("~/Images/" + fi.FileName)" asp-append-version="true" alt="">
-                                </div>
-                            }
-                            else if (fi.Type == ".mp4")
-                            {
-                                <div align="center" class="embed-responsive embed-responsive-16by9">
-                                    <video loop class="embed-responsive-item" controls>
-                                        <source src="@Url.Content("~/Images/" + fi.FileName)" type="video/mp4">
-                                    </video>
-                                </div>
-                            }
+                            <div class="tweet-img-wrap">
+                                <img class="img-fluid tweet-img" src="@("~/Images/" + fi.FileName)" asp-append-version="true" alt="">
+                            </div>
+                        }
+                        else if (fi.Type == ".mp4")
+                        {
+                            <div align="center" class="embed-responsive embed-responsive-16by9">
+                                <video loop class="embed-responsive-item" controls>
+                                    <source src="@Url.Content("~/Images/" + fi.FileName)" type="video/mp4">
+                                </video>
+                            </div>
                         }
                     }
-                </div>
-                    
+                }
             </div>
-        }
-    
-    </div>
+
+        </div>
+    }
+
+</div>

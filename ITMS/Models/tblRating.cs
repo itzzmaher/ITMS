@@ -16,5 +16,6 @@ namespace ITMS.Models
         public tblUsers User { get; set; }
         public bool IsDeleted { get; set; }
         public Guid GuId { get; set; }
+        public DateTime? DateTime { get; set; }
     }
 }

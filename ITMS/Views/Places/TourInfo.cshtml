@@ -1,42 +1,50 @@
 ﻿@model ITMS.Models.tblTour
-<div class="container">
+<title>@Model.TourName  | ITMS</title>
+<style>
+      img {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+        margin: 10px 10px 10px 10px;
+    }
+</style>
+<div class="container" style="box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;">
     <h1 class="my-4">
-        <small>@Model.Places.Name Tour</small>
+        <small>@Model.TourName </small>
     </h1>
 
     <div class="row">
 
         <div class="col-md-5">
-            <img class="img-fluid" src="@("~/Images/" + Model.ImgName)" asp-append-version="true" width="750px" height="500px">
+            <img class="img-fluid" src="@("~/Images/" + Model.ImgName)" asp-append-version="true" width="750" height="500">
         </div>
 
         <div class="col-md-7">
             <h2>Tour Details</h2>
-            <div class="row">
-                <h5>Guider Name</h5>
-            </div>
-            <div class="row">
-                <h5>@Model.Guider.User.Name</h5>
-            </div>
 
-            <div class="row">
-                <div class="col-6">
-                    <div class="row">
-                        <h5>Start Date of tours</h5>
-                    </div>
-                    <div class="row">
-                        <h5>@Model.StartDate.ToString("yyyy/MMMM/dd")</h5>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="row">
-                        <h5>End Date of tours</h5>
-                    </div>
-                    <div class="row">
-                        <h5>@Model.EndDate.ToString("yyyy/MMMM/dd")</h5>
-                    </div>
-                </div>
-            </div>
+            <table class="table">
+                <tr>
+                    <td>Guider Name</td>
+                    <td style="color:darkgray">@Model.Guider.User.Name</td>
+                </tr>
+                <tr>
+                    <td>Price</td>
+                    <td style="color:darkgray">@Model.Price (SR)</td>
+                </tr>
+                <tr>
+                    <td>Duration</td>
+                    <td style="color:darkgray">@Model.MaxTourist (hours)</td>
+                </tr>
+                <tr>
+                    <td>Start date of tours</td>
+                    <td style="color:darkgray">@Model.StartDate.ToString("yyyy/MMMM/dd")</td>
+                </tr>
+                <tr>
+                    <td>End date of tours</td>
+                    <td style="color:darkgray">@Model.EndDate.ToString("yyyy/MMMM/dd")</td>
+                </tr>
+
+            </table>
             <div class="row">
                 <h5>Description</h5>
             </div>
@@ -48,14 +56,15 @@
                 if ((int)ViewData["checkAvaliablity"] == 1)
                 {
                 <div class="row">
-                    <a class="btn btn-primary" asp-action="RegisterTour" asp-controller="Places" asp-route-id="@Model.GuId">Register</a>
+                    <a class="btn btn-primary" asp-action="RegisterTour" asp-controller="Places">Register</a>
                 </div>}
             }
             else
             {
-                <h3>You need to log-in to register</h3><div class="row">
-        <a class="btn btn-primary" asp-action="Login" asp-controller="Account">Login</a>
-        </div>
+                <h3>You need to log-in to register</h3>
+            <div class="row" style="margin: 10px 10px 10px 10px ">
+                <a class="btn btn-primary"  asp-action="Login" asp-controller="Account">Login</a>
+                </div>
     }
 
 </div>
